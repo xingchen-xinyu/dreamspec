@@ -15,7 +15,10 @@
 - **开源地址：** https://github.com/xingchen-xinyu/dreamspec
 - **安装命令：**
   ```bash
-  claude plugins install github:xingchen-xinyu/dreamspec --scope project
+  # Step 1: 注册 marketplace
+  claude plugin marketplace add xingchen-xinyu/dreamspec --scope project
+  # Step 2: 安装插件
+  claude plugin install dreamspec@dreamspec-market --scope project
   ```
 
 ### openspec

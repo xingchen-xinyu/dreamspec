@@ -3,7 +3,9 @@
   "owner": {
     "name": "星辰"
   },
-  "description": "DreamSpec 插件市场 — AI Agent 创业开发团队协作工具",
+  "metadata": {
+    "description": "DreamSpec 插件市场 — AI Agent 创业开发团队协作工具"
+  },
   "plugins": [
     {
       "name": "dreamspec",
