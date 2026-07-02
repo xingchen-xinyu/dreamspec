@@ -63,19 +63,30 @@ description: 项目初始化/迁移/升级 — 创建目录结构、检查依赖
 
 ### Step 4: 依赖检查
 
-检查以下技能是否已安装：
+依赖分为两类，分别检查。详细安装命令参考 [PLUGINS.md](../../reference/PLUGINS.md)。
+
+**A. Claude Code 插件**（检查是否已安装）：
 
 ```
 claude plugins list
 ```
 
-| 依赖 | 用途 | 缺失时操作 |
-|------|------|-----------|
-| openspec | Spec 编写 + Tasks 管理 | 提示安装：`claude plugins install openspec` |
-| superpowers | TDD + 多Agent + CodeReview + Debugging | 提示安装：`claude plugins install superpowers` |
-| ui_ux_max_pro | HTML 原型设计 | 提示安装：`claude plugins install ui_ux_max_pro` |
+| 依赖 | 用途 | 检查方式 |
+|------|------|---------|
+| superpowers | TDD + 多Agent + CodeReview + Debugging | `claude plugins list` 中是否包含 `superpowers` |
+| ui_ux_max_pro | HTML 原型设计 | `claude plugins list` 中是否包含 `ui-ux-pro-max` |
 
-列出检查结果：已安装（✅）/ 缺失（❌ 附安装命令）。
+**B. npm 全局包**（检查是否已安装）：
+
+| 依赖 | 用途 | 检查方式 |
+|------|------|---------|
+| openspec | Spec 编写 + Tasks 管理 | `openspec --version` 或 `npm list -g @fission-ai/openspec` |
+
+**C. 汇报检查结果：**
+
+列出检查结果：已安装（✅）/ 缺失（❌），缺失时从 [PLUGINS.md](../../reference/PLUGINS.md) 获取对应的安装命令提示用户。
+
+所有依赖默认安装到**项目级**（Claude Code 插件加 `--scope project`，npm 包在项目目录执行 `openspec init`）。
 
 ### Step 5: CLAUDE.md 处理
 

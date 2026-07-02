@@ -5,7 +5,7 @@
 ## 安装
 
 ```bash
-claude plugins install github:xingchen-xinyu/dreamspec
+claude plugins install github:xingchen-xinyu/dreamspec --scope project
 ```
 
 安装后自动注册以下命令：`/ds:init`  `/ds:strategy`  `/ds:build`  `/ds:fix`
@@ -15,7 +15,7 @@ claude plugins install github:xingchen-xinyu/dreamspec
 ## 升级
 
 ```bash
-claude plugins install github:xingchen-xinyu/dreamspec
+claude plugins install github:xingchen-xinyu/dreamspec --scope project
 ```
 
 插件 Skill 文件由 Claude Code 自动更新。然后在项目目录中运行：
@@ -36,7 +36,7 @@ claude plugins uninstall dreamspec
 
 ```bash
 mkdir my-app && cd my-app
-claude plugins install github:xingchen-xinyu/dreamspec
+claude plugins install github:xingchen-xinyu/dreamspec --scope project
 ```
 
 在 Claude Code 中：
@@ -51,7 +51,7 @@ claude plugins install github:xingchen-xinyu/dreamspec
 
 ```bash
 cd existing-project
-claude plugins install github:xingchen-xinyu/dreamspec
+claude plugins install github:xingchen-xinyu/dreamspec --scope project
 ```
 
 在 Claude Code 中：

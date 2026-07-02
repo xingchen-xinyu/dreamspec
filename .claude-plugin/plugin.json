@@ -10,7 +10,6 @@
   "license": "MIT",
   "keywords": ["project-management", "ai-agent", "startup", "development-team"],
   "dependencies": {
-    "openspec": "latest",
     "superpowers": "latest",
     "ui_ux_max_pro": "latest"
   }
