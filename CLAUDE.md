@@ -8,14 +8,14 @@
 
 ```
 skills/          # Skill 定义（编排器 + 角色）
-  init.md        # /init 项目初始化
-  strategy.md    # /strategy 战略规划
-  build.md       # /build 版本交付
-  fix.md         # /fix 问题修复
-  ceo.md         # CEO 角色
-  po.md          # PO 角色
-  tl.md          # TL 角色
-  qa.md          # QA 角色
+  init/SKILL.md        # /init 项目初始化
+  strategy/SKILL.md    # /strategy 战略规划
+  build/SKILL.md       # /build 版本交付
+  fix/SKILL.md         # /fix 问题修复
+  ceo/SKILL.md         # CEO 角色
+  po/SKILL.md          # PO 角色
+  tl/SKILL.md          # TL 角色
+  qa/SKILL.md          # QA 角色
 templates/       # 项目模板
   state.json     # plugin-state.json 模板
 ```

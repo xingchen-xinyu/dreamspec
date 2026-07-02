@@ -5,12 +5,18 @@
 ## 安装
 
 ```bash
-claude plugins install github:用户名/DreamSpec
+claude plugins install github:xingchen-xinyu/dreamspec
 ```
 
 安装后自动注册以下命令：`/init`  `/strategy`  `/build`  `/fix`
 
 依赖自动安装：openspec + superpowers + ui_ux_max_pro
+
+## 卸载
+
+```bash
+claude plugins uninstall dreamspec
+```
 
 ## 快速开始
 
@@ -18,7 +24,7 @@ claude plugins install github:用户名/DreamSpec
 
 ```bash
 mkdir my-app && cd my-app
-claude plugins install github:用户名/DreamSpec
+claude plugins install github:xingchen-xinyu/dreamspec
 ```
 
 在 Claude Code 中：
@@ -33,7 +39,7 @@ claude plugins install github:用户名/DreamSpec
 
 ```bash
 cd existing-project
-claude plugins install github:用户名/DreamSpec
+claude plugins install github:xingchen-xinyu/dreamspec
 ```
 
 在 Claude Code 中：
