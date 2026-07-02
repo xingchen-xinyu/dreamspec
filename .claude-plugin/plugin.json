@@ -1,0 +1,17 @@
+{
+  "name": "dreamspec",
+  "version": "1.0.0",
+  "description": "AI Agent 创业开发团队 — CEO/PO/TL/QA 协作开发，从想法到交付完整落地",
+  "author": {
+    "name": "星辰",
+    "url": "https://github.com/xingchen-xinyu"
+  },
+  "repository": "https://github.com/xingchen-xinyu/dreamspec",
+  "license": "MIT",
+  "keywords": ["project-management", "ai-agent", "startup", "development-team"],
+  "dependencies": {
+    "openspec": "latest",
+    "superpowers": "latest",
+    "ui_ux_max_pro": "latest"
+  }
+}
