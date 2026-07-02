@@ -8,9 +8,5 @@
   },
   "repository": "https://github.com/xingchen-xinyu/dreamspec",
   "license": "MIT",
-  "keywords": ["project-management", "ai-agent", "startup", "development-team"],
-  "dependencies": [
-    "superpowers",
-    "ui_ux_max_pro"
-  ]
+  "keywords": ["project-management", "ai-agent", "startup", "development-team"]
 }
