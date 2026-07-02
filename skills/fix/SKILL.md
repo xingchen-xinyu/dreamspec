@@ -17,7 +17,7 @@ description: 问题修复 — TL 定位修复 + QA 验证
 
 ### Step 1: TL 定位
 
-**加载 TL 角色 Skill（skills/tl/SKILL.md）。**
+**加载 TL 角色 Skill（roles/tl.md）。**
 
 1. 使用 `superpowers:systematic-debugging` 技能：
    - 复现问题
@@ -46,7 +46,7 @@ description: 问题修复 — TL 定位修复 + QA 验证
 
 ### Step 3: QA 验证
 
-**加载 QA 角色 Skill（skills/qa/SKILL.md）。**
+**加载 QA 角色 Skill（roles/qa.md）。**
 
 1. 检查修复完整性：
    - 根因是否被真正修复（不是绕过）
