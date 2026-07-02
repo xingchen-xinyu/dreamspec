@@ -7,15 +7,16 @@
 ## 仓库结构
 
 ```
-skills/          # Skill 定义（编排器 + 角色）
-  init/SKILL.md        # /init 项目初始化
-  strategy/SKILL.md    # /strategy 战略规划
-  build/SKILL.md       # /build 版本交付
-  fix/SKILL.md         # /fix 问题修复
-  ceo/SKILL.md         # CEO 角色
-  po/SKILL.md          # PO 角色
-  tl/SKILL.md          # TL 角色
-  qa/SKILL.md          # QA 角色
+skills/          # 命令入口（编排器）
+  init/SKILL.md        # /ds:init 项目初始化/迁移/升级
+  strategy/SKILL.md    # /ds:strategy 战略规划
+  build/SKILL.md       # /ds:build 版本交付
+  fix/SKILL.md         # /ds:fix 问题修复
+roles/           # 角色定义（不注册命令，被编排器加载）
+  ceo.md               # CEO 角色
+  po.md                # PO 角色
+  tl.md                # TL 角色
+  qa.md                # QA 角色
 templates/       # 项目模板
   state.json     # plugin-state.json 模板
 ```
@@ -30,7 +31,7 @@ templates/       # 项目模板
 
 - 编排器 Skill 负责流程调度和角色加载
 - 角色 Skill 负责专业能力定义和规范约束
-- 角色 Skill 只被编排器加载，不独立作为命令入口
+- 角色定义放在 roles/ 目录，不注册命令入口，仅被编排器按需加载
 - 强制规则使用"红线"标记，语气明确不容模糊
 
 ## 开发准则

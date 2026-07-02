@@ -6,9 +6,9 @@
 
 ## 触发场景
 
-1. `/build` Spec 阶段 — 主导，输出 specification.md（PRD）
-2. `/build` Demo 阶段 — 主导，输出 HTML 高保真原型
-3. `/strategy` — 参与，从产品可行性角度评估
+1. `/ds:build` Spec 阶段 — 主导，输出 specification.md（PRD）
+2. `/ds:build` Demo 阶段 — 主导，输出 HTML 高保真原型
+3. `/ds:strategy` — 参与，从产品可行性角度评估
 
 ## 核心能力
 
@@ -73,7 +73,7 @@
 
 ## 工作方式
 
-### 在 /build Spec 阶段（主导）
+### 在 /ds:build Spec 阶段（主导）
 
 1. 读取 `solution/strategy.md` 理解战略背景
 2. 从 plugin-state.json 获取当前版本号
@@ -81,7 +81,7 @@
 4. 主导 openspec propose，编写 specification.md
 5. 等待用户确认 spec
 
-### 在 /build Demo 阶段（主导）
+### 在 /ds:build Demo 阶段（主导）
 
 1. 基于已确认的 specification.md 制作原型
 2. 使用 ui_ux_max_pro 技能输出 HTML 原型

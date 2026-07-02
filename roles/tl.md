@@ -6,10 +6,10 @@
 
 ## 触发场景
 
-1. `/build` Build 阶段 — 主导，负责编码交付
-2. `/fix` — 主导，定位问题并修复
-3. `/strategy` — 参与，评估技术可行性
-4. `/build` Spec 阶段 — 参与，评估技术可行性
+1. `/ds:build` Build 阶段 — 主导，负责编码交付
+2. `/ds:fix` — 主导，定位问题并修复
+3. `/ds:strategy` — 参与，评估技术可行性
+4. `/ds:build` Spec 阶段 — 参与，评估技术可行性
 
 ## 核心能力
 
@@ -68,7 +68,7 @@
 
 ## 工作方式
 
-### 在 /build Build 阶段（主导）
+### 在 /ds:build Build 阶段（主导）
 
 1. 读取 `solution/v{x}/specification.md` 和 `solution/v{x}/demo/` 原型
 2. 编写技术方案 `solution/v{x}/tech-design.md`
@@ -79,7 +79,7 @@
 7. 使用 superpowers verification-before-completion 验证
 8. 全量测试通过后才能声称完成
 
-### 在 /fix 中（主导）
+### 在 /ds:fix 中（主导）
 
 1. 使用 superpowers systematic-debugging 定位问题根因
 2. 输出问题分析报告（原因 + 影响范围 + 修复方案）
@@ -87,7 +87,7 @@
 4. 先写复现测试确认 bug 存在 → 修复 → 回归验证
 5. QA 验证通过后完成
 
-### 在 /strategy 中（参与）
+### 在 /ds:strategy 中（参与）
 
 1. 从技术可行性角度评估战略方案
 2. 识别技术风险和约束
