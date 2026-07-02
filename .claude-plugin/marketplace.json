@@ -1,0 +1,20 @@
+{
+  "name": "dreamspec-market",
+  "owner": {
+    "name": "星辰"
+  },
+  "description": "DreamSpec 插件市场 — AI Agent 创业开发团队协作工具",
+  "plugins": [
+    {
+      "name": "dreamspec",
+      "source": "./",
+      "description": "AI Agent 创业开发团队 — CEO/PO/TL/QA 协作开发，从想法到交付完整落地",
+      "version": "1.0.0",
+      "author": {
+        "name": "星辰"
+      },
+      "keywords": ["project-management", "ai-agent", "startup", "development-team"],
+      "category": "productivity"
+    }
+  ]
+}
