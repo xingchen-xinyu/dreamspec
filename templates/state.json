@@ -1,0 +1,21 @@
+{
+  "project": {
+    "name": "",
+    "description": ""
+  },
+  "currentVersion": "0.0.0",
+  "status": "init_completed",
+  "phases": {
+    "init_completed": false,
+    "strategy_completed": false
+  },
+  "techStack": {
+    "frontend": [],
+    "backend": [],
+    "platforms": []
+  },
+  "directories": {
+    "src": ["server", "web"]
+  },
+  "installed_at": ""
+}
