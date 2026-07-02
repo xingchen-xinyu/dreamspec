@@ -1,19 +1,19 @@
 ---
-name: build
+name: ds:build
 description: 版本交付 — 注入角色上下文到 openspec，Explore+Spec → Demo → Build 四步流程
 ---
 
-# /build — 版本交付
+# /ds:build — 版本交付
 
 ## 入口
 
-用户输入 `/build` 触发。
+用户输入 `/ds:build` 触发。
 
 ## 前置准备
 
 1. 检查 `solution/strategy.md` 是否存在。不存在 → 提示用户先执行 `/strategy`
 2. 从 `plugin-state.json` 读取 `currentVersion`，自动推断下一版本：
-   - 首次 /build → v1.0
+   - 首次 /ds:build → v1.0
    - 默认递增末位 → v1.0 → v1.1
    - 大版本升级（如 2.0）在 Explore 阶段由用户指定
 3. 创建版本目录 `solution/v{x}/`

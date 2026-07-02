@@ -1,13 +1,13 @@
 ---
-name: fix
+name: ds:fix
 description: 问题修复 — TL 定位修复 + QA 验证
 ---
 
-# /fix — 问题修复
+# /ds:fix — 问题修复
 
 ## 入口
 
-用户输入 `/fix` 并附带问题描述或 bug 信息。
+用户输入 `/ds:fix` 并附带问题描述或 bug 信息。
 
 ## 前置准备
 

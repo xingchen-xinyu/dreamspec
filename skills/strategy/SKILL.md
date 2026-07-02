@@ -1,19 +1,19 @@
 ---
-name: strategy
+name: ds:strategy
 description: 战略规划 — CEO 主导，PO/TL 参与，制定产品战略和版本路线图
 ---
 
-# /strategy — 战略规划
+# /ds:strategy — 战略规划
 
 ## 入口
 
-用户输入 `/strategy` 触发。
+用户输入 `/ds:strategy` 触发。
 
 ## 流程
 
 ### 阶段 1: 准备
 
-1. 检查 `solution/strategy.md` 是否存在
+1. 检查 `solution/ds:strategy.md` 是否存在
    - 已存在 → 提示用户：本次是更新战略还是重新制定？
    - 不存在 → 进入新战略制定流程
 2. 确保 CEO/PO/TL 角色 Skill 可用
@@ -55,11 +55,11 @@ CEO 综合 PO 和 TL 的反馈，形成最终战略方案。
 3. 技术栈确认
 4. 目录结构
 
-等待用户确认后写入 `solution/strategy.md`，更新 `plugin-state.json` 的 `strategy_completed = true`。
+等待用户确认后写入 `solution/ds:strategy.md`，更新 `plugin-state.json` 的 `strategy_completed = true`。
 
 ## 产出物
 
-- `solution/strategy.md` — 战略规划文档
+- `solution/ds:strategy.md` — 战略规划文档
 - 更新 `plugin-state.json` — 技术栈和目录信息
 
 ## 强制规则

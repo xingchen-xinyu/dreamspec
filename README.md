@@ -12,6 +12,18 @@ claude plugins install github:xingchen-xinyu/dreamspec
 
 依赖自动安装：openspec + superpowers + ui_ux_max_pro
 
+## 升级
+
+```bash
+claude plugins install github:xingchen-xinyu/dreamspec
+```
+
+插件 Skill 文件由 Claude Code 自动更新。然后在项目目录中运行：
+
+```
+/init          # 自动识别升级（plugin-state.json 已存在），迁移状态文件、更新 CLAUDE.md
+```
+
 ## 卸载
 
 ```bash
@@ -53,7 +65,7 @@ claude plugins install github:xingchen-xinyu/dreamspec
 
 | 命令 | 用途 | 何时用 |
 |------|------|--------|
-| `/init` | 项目初始化/迁移 | 新项目开始、切换到插件模式 |
+| `/init` | 项目初始化/迁移/升级 | 新项目开始、切换到插件模式、插件升级 |
 | `/strategy` | 战略规划 | 0→1 必须，后续按需调整战略 |
 | `/build` | 版本交付 | 每个版本迭代 |
 | `/fix` | 问题修复 | Bug 修复 |
