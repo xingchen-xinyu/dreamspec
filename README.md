@@ -20,7 +20,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 ```bash
 # 更新 marketplace 和插件到最新版本
 claude plugin marketplace update dreamspec-market
-claude plugin update dreamspec@dreamspec-market
+claude plugin update dreamspec@dreamspec-market --scope project
 ```
 
 插件 Skill 文件由 Claude Code 自动更新。然后在项目目录中运行：

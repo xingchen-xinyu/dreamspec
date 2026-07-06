@@ -56,7 +56,7 @@ description: 项目初始化/迁移/升级 — 创建目录结构、检查依赖
       - 跳至步骤 5
 4. **强制升级**（无论版本是否一致，用远端最新版本覆盖本地插件）：
    a. 执行 marketplace 更新：`claude plugin marketplace update dreamspec-market`
-   b. 执行插件更新：`claude plugin update dreamspec@dreamspec-market`（远端最新版本覆盖本地 Skill 文件）
+   b. 执行插件更新：`claude plugin update dreamspec@dreamspec-market --scope project`（远端最新版本覆盖本地 Skill 文件）
    c. 目录检查：确保新版本所需目录结构齐全（只新增不删除）
    d. CLAUDE.md 同步：以本 Skill 的 Step 5 中定义的 CLAUDE.md 骨架模板作为对比基准，与本地 CLAUDE.md 对比，保留用户已填写的自定义信息（项目名称、描述、技术栈），更新框架内容，用户确认后写入
    e. plugin-state.json 迁移：补全新版中新增的字段，**保留**用户已填写的信息（project.name、project.description、techStack、directories、currentVersion 等），更新 `plugin_version`
