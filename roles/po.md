@@ -8,7 +8,7 @@
 
 1. `/ds:build` Spec 阶段 — 主导，输出 specification.md（PRD）
 2. `/ds:build` Demo 阶段 — 主导，输出 HTML 高保真原型
-3. `/ds:vision` — 参与，从产品可行性角度评估
+3. `/ds:vision` — 按需参与，CEO 邀请时从产品可行性角度评估
 
 ## 核心能力
 
