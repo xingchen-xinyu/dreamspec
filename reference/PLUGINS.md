@@ -20,6 +20,11 @@
   # Step 2: 安装插件
   claude plugin install dreamspec@dreamspec-market --scope project
   ```
+- **升级命令：**
+  ```bash
+  claude plugin marketplace update dreamspec-market
+  claude plugin update dreamspec@dreamspec-market --scope project
+  ```
 
 ### openspec
 
@@ -35,6 +40,12 @@
   openspec config profile      # 选择 expanded workflows
   openspec update              # 应用到当前项目
   ```
+- **升级命令：**
+  ```bash
+  npm install -g @fission-ai/openspec@latest
+  cd <your-project>
+  openspec update
+  ```
 
 ### superpowers
 
@@ -44,6 +55,10 @@
 - **安装命令：**
   ```bash
   claude plugins install superpowers@claude-plugins-official --scope project
+  ```
+- **升级命令：**
+  ```bash
+  claude plugin update superpowers@claude-plugins-official --scope project
   ```
 
 ### ui_ux_max_pro
@@ -62,6 +77,11 @@
   cd <your-project>
   uipro init --ai claude
   ```
+- **升级命令：**
+  ```bash
+  claude plugin marketplace update ui-ux-pro-max-skill
+  claude plugin update ui-ux-pro-max@ui-ux-pro-max-skill --scope project
+  ```
 
 ### frontend-design
 
@@ -71,4 +91,8 @@
 - **安装命令：**
   ```bash
   claude plugins install frontend-design@claude-plugins-official --scope project
+  ```
+- **升级命令：**
+  ```bash
+  claude plugin update frontend-design@claude-plugins-official --scope project
   ```
