@@ -114,7 +114,6 @@ claude plugin install dreamspec@dreamspec-market --scope project
 │   ├── server/        # 后端
 │   ├── web/           # 前端
 │   └── ...            # /ds:strategy 后按技术栈扩展
-├── tests/
 ├── .claude/
 │   └── plugin-state.json
 └── README.md
