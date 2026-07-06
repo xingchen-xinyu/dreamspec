@@ -57,10 +57,40 @@ CEO 综合 PO 和 TL 的反馈，形成最终战略方案。
 
 等待用户确认后写入 `solution/ds:strategy.md`，更新 `plugin-state.json` 的 `strategy_completed = true`。
 
+### 阶段 7: 项目信息回填
+
+战略方案确认后，将产出信息回填到项目元数据中，完成 init 阶段留下的草稿信息：
+
+1. 从 `solution/ds:strategy.md` 提取：
+   - **产品名称**：从「产品定位」章节提取（如 strategy 阶段确定了更精确的名称，则覆盖 init 阶段的目录名；否则保留目录名）
+   - **一句话描述**：从「产品定位」章节提取一句定位语（覆盖 init 阶段的空字符串）
+   - **技术栈**：从确认的技术选型中提取完整列表
+
+2. 更新 `.claude/plugin-state.json`：
+   - `project.name` → 最终产品名称
+   - `project.description` → 一句话描述
+   - `phases.strategy_completed` → `true`
+   - `techStack` → 完整技术栈信息（已在阶段 5 更新）
+
+3. 更新 `CLAUDE.md` 中的占位内容：
+   - 将 `{{PROJECT_INFO}}` 替换为实际产品名称和一句话描述（如 `产品名称 — 一句话描述`）
+   - 将 `{{TECH_STACK}}` 替换为实际技术栈列表
+   - 保留用户已在 CLAUDE.md 中手动添加的其他内容，只做确定性替换
+
+4. 汇报回填结果：
+   ```markdown
+   **项目信息已回填：**
+   - 产品名称：[name]
+   - 一句话描述：[description]
+   - 技术栈：[techStack 摘要]
+   - 已更新：CLAUDE.md、plugin-state.json
+   ```
+
 ## 产出物
 
 - `solution/ds:strategy.md` — 战略规划文档
-- 更新 `plugin-state.json` — 技术栈和目录信息
+- 更新 `plugin-state.json` — 回填 project.name/description + techStack + directories + strategy_completed
+- 更新 `CLAUDE.md` — 回填项目名称、描述、技术栈
 
 ## 强制规则
 

@@ -15,19 +15,21 @@ description: 项目初始化/迁移/升级 — 创建目录结构、检查依赖
 
 检查项目目录状态：
 
-- **全新项目**（空目录或无 CLAUDE.md/package.json 等工程文件）→ 交互式配置
+- **全新项目**（空目录或无 CLAUDE.md/package.json 等工程文件）→ 默认草稿
 - **已有项目**（存在 CLAUDE.md、package.json、src/ 等）→ 迁移模式
 - **插件升级**（存在 `.claude/plugin-state.json`）→ 升级模式
 
 ### Step 2: 项目配置
 
-**全新项目 — 交互式确认：**
+**全新项目 — 默认草稿：**
 
-每次只问一个问题：
-1. 项目名称是什么？
-2. 一句话简介？
-3. 技术栈偏好（前端/后端/平台）？可以等 /strategy 阶段再确定
-4. 是否有特殊目录需求？（默认 server + web）
+初次初始化全部采用默认值，零交互。待 /strategy 阶段完成后回填最终信息。
+
+默认配置：
+- 项目名称：当前根目录名称
+- 一句话简介：留空（/strategy 阶段完成后回填）
+- 技术栈：留空（/strategy 阶段完成后确定）
+- 目录结构：默认（server + web）
 
 **已有项目 — 自动识别 + 确认：**
 
@@ -35,15 +37,30 @@ description: 项目初始化/迁移/升级 — 创建目录结构、检查依赖
 2. 自动识别现有版本（从 openspec、git tag 等推断）
 3. 展示识别结果，等待用户确认或修正
 
-**插件升级 — 自动检测 + 增量更新：**
+**插件升级 — 自动检测 + 增量/强制更新：**
 
 1. 读取 `.claude/plugin-state.json` 中的 `plugin_version`，与当前 `plugin.json` 的 `version` 对比
-2. 版本相同时 → 提示"已是最新版"，直接结束
-3. 版本不同时，执行增量更新：
-   - 目录补全：新增不存在的目录（如新版本新增的目录结构），不删现有文件
-   - CLAUDE.md 对比：读取当前 CLAUDE.md，与新版模板对比，提示变更内容，等用户确认后更新
-   - plugin-state.json 迁移：补全新版中新增的字段（不删旧字段），更新 `plugin_version`
-4. 汇报升级结果：版本变更（1.0.0 → 1.1.0）+ 更新了哪些文件
+2. 版本相同时：
+   a. 检查用户输入是否包含「强制升级」或 `--force` 关键词
+      - 是 → 跳过确认，直接执行强制升级（跳至步骤 4）
+   b. 未检测到强制关键词 → 询问用户："当前已是最新版本 (vX.X.X)。是否需要强制用远端最新版本覆盖本地插件？"
+      - 用户选择是 → 执行强制升级（跳至步骤 4）
+      - 用户选择否 → 提示"已是最新版"，直接结束
+3. 版本不同时：
+   a. 检查用户输入是否包含「强制升级」或 `--force` 关键词
+      - 是 → 跳过增量更新，直接执行强制升级（跳至步骤 4）
+   b. 未检测到强制关键词 → 执行增量更新：
+      - 目录补全：新增不存在的目录（如新版本新增的目录结构），不删现有文件
+      - CLAUDE.md 对比：读取当前 CLAUDE.md，与新版模板对比，提示变更内容，等用户确认后更新
+      - plugin-state.json 迁移：补全新版中新增的字段（不删旧字段），更新 `plugin_version`
+      - 跳至步骤 5
+4. **强制升级**（无论版本是否一致，用远端最新版本覆盖本地插件）：
+   a. 执行 marketplace 更新：`claude plugin marketplace update dreamspec-market`
+   b. 执行插件更新：`claude plugin update dreamspec@dreamspec-market`（远端最新版本覆盖本地 Skill 文件）
+   c. 目录检查：确保新版本所需目录结构齐全（只新增不删除）
+   d. CLAUDE.md 同步：以本 Skill 的 Step 5 中定义的 CLAUDE.md 骨架模板作为对比基准，与本地 CLAUDE.md 对比，保留用户已填写的自定义信息（项目名称、描述、技术栈），更新框架内容，用户确认后写入
+   e. plugin-state.json 迁移：补全新版中新增的字段，**保留**用户已填写的信息（project.name、project.description、techStack、directories、currentVersion 等），更新 `plugin_version`
+5. 汇报升级结果：版本变更（X.X.X → Y.Y.Y）+ 更新了哪些文件
 
 ### Step 3: 创建目录结构
 
@@ -75,6 +92,7 @@ claude plugins list
 |------|------|---------|
 | superpowers | TDD + 多Agent + CodeReview + Debugging | `claude plugins list` 中是否包含 `superpowers` |
 | ui_ux_max_pro | HTML 原型设计 | `claude plugins list` 中是否包含 `ui-ux-pro-max` |
+| frontend-design | 前端 UI 组件设计与生成 | `claude plugins list` 中是否包含 `frontend-design` |
 
 **B. npm 全局包**（检查是否已安装）：
 
@@ -99,7 +117,7 @@ claude plugins list
 
 ## 项目
 
-[项目名称] — [一句话简介]
+{{PROJECT_INFO}}
 
 ## 仓库结构
 
@@ -108,13 +126,14 @@ src/web/     # 前端
 
 ## 技术栈
 
-（/strategy 阶段确定后更新）
+{{TECH_STACK}}
 
 ## 工作方式
 
+战略调整：/strategy
 新功能开发：/build → Explore → Spec → Demo → Build
 Bug 修复：/fix
-战略调整：/strategy
+
 ```
 
 **已有项目 — 递归处理所有 CLAUDE.md：**
@@ -135,8 +154,8 @@ Bug 修复：/fix
 ```json
 {
   "project": {
-    "name": "[项目名称]",
-    "description": "[简介]"
+    "name": "[根目录名称]",
+    "description": ""
   },
   "plugin_version": "[当前插件版本号]",
   "currentVersion": "0.0.0",
@@ -167,12 +186,12 @@ Bug 修复：/fix
 **依赖状态：** [各依赖检查结果]
 **CLAUDE.md：** [处理结果]
 
-**下一步：** /strategy（制定产品战略）或 /build（开始版本交付）
+**下一步：** /strategy（制定产品战略，完成后自动回填项目信息），待 strategy 完成后再 /build（开始版本交付）
 ```
 
 ## 强制规则
 
-- 只新增文件和目录，不删除、不修改任何现有文件
+- 只新增文件和目录，不删除、不修改用户源代码文件（src/、tests/ 等），CLAUDE.md 和 plugin-state.json 在升级时需用户确认后更新
 - CLAUDE.md 必须备份原文件为 `.bak` 后才精简
 - 每次只问一个问题
 - 依赖缺失不阻塞，给出安装命令即可

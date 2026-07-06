@@ -62,3 +62,13 @@
   cd <your-project>
   uipro init --ai claude
   ```
+
+### frontend-design
+
+- **类型：** Claude Code 插件
+- **用途：** 前端 UI 组件设计 — 生成高质量、可维护的前端组件代码，支持设计系统驱动的 UI 开发
+- **开源地址：** https://github.com/anthropics/claude-plugins-official（与 superpowers 同源，来自 claude-plugins-official marketplace）
+- **安装命令：**
+  ```bash
+  claude plugins install frontend-design@claude-plugins-official --scope project
+  ```

@@ -25,7 +25,7 @@ templates/       # 项目模板
 
 - 插件类型：Claude Code Plugin
 - Skill 格式：Markdown with YAML frontmatter
-- 依赖：openspec、superpowers、ui_ux_max_pro
+- 依赖：openspec、superpowers、ui_ux_max_pro、frontend-design
 
 ## Skill 文件规范
 
