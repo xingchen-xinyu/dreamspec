@@ -1,6 +1,6 @@
 ---
 name: ds:init
-description: 项目初始化/迁移/升级 — 创建目录结构、检查依赖、精简 CLAUDE.md、检测版本升级
+description: 项目初始化/迁移/升级 — 依赖检查与强制安装 → 插件版本检测 → 项目配置 → 目录创建 → CLAUDE.md 处理
 ---
 
 # /ds:init — 项目初始化/迁移/升级
@@ -19,7 +19,92 @@ description: 项目初始化/迁移/升级 — 创建目录结构、检查依赖
 - **已有项目**（存在 CLAUDE.md、package.json、src/ 等）→ 迁移模式
 - **插件升级**（存在 `.claude/plugin-state.json`）→ 升级模式
 
-### Step 2: 项目配置
+### Step 2: 依赖检查与强制安装 🚫阻断
+
+> **红线：所有依赖必须安装成功后才能继续下一步。安装失败则流程终止，用户解决问题后重新执行。**
+
+依赖分为两类，分别检查。详细安装命令参考 [PLUGINS.md](../../reference/PLUGINS.md)。
+
+**A. Claude Code 插件**（检查是否已安装）：
+
+执行 `claude plugins list` 检查：
+
+| 依赖 | 用途 | 检查方式 |
+|------|------|---------|
+| superpowers | TDD + 多Agent + CodeReview + Debugging | `claude plugins list` 中是否包含 `superpowers` |
+| ui_ux_max_pro | HTML 原型设计 | `claude plugins list` 中是否包含 `ui-ux-pro-max` |
+| frontend-design | 前端 UI 组件设计与生成 | `claude plugins list` 中是否包含 `frontend-design` |
+
+**B. npm 全局包**（检查是否已安装）：
+
+| 依赖 | 用途 | 检查方式 |
+|------|------|---------|
+| openspec | Spec 编写 + Tasks 管理 | `openspec --version` 或 `npm list -g @fission-ai/openspec` |
+
+**C. 自动安装缺失依赖：**
+
+1. 汇总所有缺失的依赖
+2. 对每个缺失依赖，从 [PLUGINS.md](../../reference/PLUGINS.md) 获取安装命令并**自动执行安装**
+3. 所有依赖默认安装到**项目级**（Claude Code 插件加 `--scope project`，npm 包在项目目录执行 `openspec init`）
+4. 安装结果：
+   - ✅ 全部安装成功 → 进入 Step 3
+   - ❌ 任一安装失败 → **流程终止**，展示失败原因和手动安装命令，提示用户解决问题后重新执行 `/ds:init`
+
+### Step 3: 插件版本检测与升级
+
+检查主插件和依赖插件是否有新版本，由用户决定是否升级。
+
+**A. 主插件（dreamspec）版本检测：**
+
+1. 更新 marketplace：`claude plugin marketplace update dreamspec-market`
+2. 读取 `.claude/plugin-state.json` 中的 `plugin_version`（全新项目无此字段，视为首次安装）
+3. 读取当前插件 `plugin.json` 的 `version` 作为最新可用版本
+4. 对比：
+   - 首次安装 → 提示"首次安装 dreamspec vX.X.X"
+   - 版本相同 → 提示"dreamspec 已是最新版本 (vX.X.X)"
+   - 有新版本 → 提示"dreamspec 可升级：v旧 → v新"
+
+**B. 依赖插件版本检测：**
+
+对每个已安装的依赖插件，检查是否有新版本可用（仅检测，不执行升级，升级在步骤 D 用户确认后执行）：
+
+1. 执行 `claude plugins list` 获取每个依赖插件的当前安装版本
+2. 对比 marketplace 上的最新版本（通过 marketplace 信息或检查更新提示）
+3. 汇总版本差异
+
+**C. 汇总版本检测结果：**
+
+```markdown
+📦 插件版本检测
+
+| 插件 | 当前版本 | 最新版本 | 状态 |
+|------|---------|---------|------|
+| dreamspec | 1.0.0 | 1.1.0 | 🔄 可升级 |
+| superpowers | 2.0.0 | 2.0.0 | ✅ 已是最新 |
+| frontend-design | 1.0.0 | 1.2.0 | 🔄 可升级 |
+
+共 2 个插件可升级。是否升级到最新版本？
+```
+
+**D. 用户决策：**
+
+- 用户选择升级 → 依次执行升级命令（marketplace update + plugin update --scope project）
+- 用户选择跳过 → 保持当前版本，继续下一步
+- 升级失败 → 不阻塞流程，记录失败信息，在最终报告中提示
+
+**E. 插件升级（dreamspec 自身）的特殊处理：**
+
+当 dreamspec 自身需要升级时，执行增量/强制更新（与旧版升级逻辑一致）：
+
+1. 检查用户输入是否包含「强制升级」或 `--force` 关键词 → 强制升级
+2. 版本不同且非强制 → 执行增量更新：
+   - 目录补全：新增不存在的目录，不删现有文件
+   - CLAUDE.md 对比：读取当前 CLAUDE.md，与新版模板对比，等用户确认后更新
+   - plugin-state.json 迁移：补全新字段，保留用户数据，更新 `plugin_version`
+3. 强制升级 → 用远端最新版本覆盖本地 Skill 文件，保留用户数据
+4. 汇报升级结果
+
+### Step 4: 项目配置
 
 **全新项目 — 默认草稿：**
 
@@ -37,32 +122,12 @@ description: 项目初始化/迁移/升级 — 创建目录结构、检查依赖
 2. 自动识别现有版本（从 openspec、git tag 等推断）
 3. 展示识别结果，等待用户确认或修正
 
-**插件升级 — 自动检测 + 增量/强制更新：**
+**插件升级模式**（存在 `.claude/plugin-state.json`）：
+- Step 2/3 已处理依赖和版本检测
+- 如果 Step 3 执行了插件升级，本步骤跳过项目配置（沿用已有配置）
+- 如果是纯升级场景（非首次 init），升级完成后流程结束
 
-1. 读取 `.claude/plugin-state.json` 中的 `plugin_version`，与当前 `plugin.json` 的 `version` 对比
-2. 版本相同时：
-   a. 检查用户输入是否包含「强制升级」或 `--force` 关键词
-      - 是 → 跳过确认，直接执行强制升级（跳至步骤 4）
-   b. 未检测到强制关键词 → 询问用户："当前已是最新版本 (vX.X.X)。是否需要强制用远端最新版本覆盖本地插件？"
-      - 用户选择是 → 执行强制升级（跳至步骤 4）
-      - 用户选择否 → 提示"已是最新版"，直接结束
-3. 版本不同时：
-   a. 检查用户输入是否包含「强制升级」或 `--force` 关键词
-      - 是 → 跳过增量更新，直接执行强制升级（跳至步骤 4）
-   b. 未检测到强制关键词 → 执行增量更新：
-      - 目录补全：新增不存在的目录（如新版本新增的目录结构），不删现有文件
-      - CLAUDE.md 对比：读取当前 CLAUDE.md，与新版模板对比，提示变更内容，等用户确认后更新
-      - plugin-state.json 迁移：补全新版中新增的字段（不删旧字段），更新 `plugin_version`
-      - 跳至步骤 5
-4. **强制升级**（无论版本是否一致，用远端最新版本覆盖本地插件）：
-   a. 执行 marketplace 更新：`claude plugin marketplace update dreamspec-market`
-   b. 执行插件更新：`claude plugin update dreamspec@dreamspec-market --scope project`（远端最新版本覆盖本地 Skill 文件）
-   c. 目录检查：确保新版本所需目录结构齐全（只新增不删除）
-   d. CLAUDE.md 同步：以本 Skill 的 Step 5 中定义的 CLAUDE.md 骨架模板作为对比基准，与本地 CLAUDE.md 对比，保留用户已填写的自定义信息（项目名称、描述、技术栈），更新框架内容，用户确认后写入
-   e. plugin-state.json 迁移：补全新版中新增的字段，**保留**用户已填写的信息（project.name、project.description、techStack、directories、currentVersion 等），更新 `plugin_version`
-5. 汇报升级结果：版本变更（X.X.X → Y.Y.Y）+ 更新了哪些文件
-
-### Step 3: 创建目录结构
+### Step 5: 创建目录结构
 
 只新增，不删除现有文件/目录：
 
@@ -78,37 +143,7 @@ description: 项目初始化/迁移/升级 — 创建目录结构、检查依赖
 └── README.md            # 新增（如果不存在）
 ```
 
-### Step 4: 依赖检查
-
-依赖分为两类，分别检查。详细安装命令参考 [PLUGINS.md](../../reference/PLUGINS.md)。
-
-**A. Claude Code 插件**（检查是否已安装）：
-
-```
-claude plugins list
-```
-
-| 依赖 | 用途 | 检查方式 |
-|------|------|---------|
-| superpowers | TDD + 多Agent + CodeReview + Debugging | `claude plugins list` 中是否包含 `superpowers` |
-| ui_ux_max_pro | HTML 原型设计 | `claude plugins list` 中是否包含 `ui-ux-pro-max` |
-| frontend-design | 前端 UI 组件设计与生成 | `claude plugins list` 中是否包含 `frontend-design` |
-
-**B. npm 全局包**（检查是否已安装）：
-
-| 依赖 | 用途 | 检查方式 |
-|------|------|---------|
-| openspec | Spec 编写 + Tasks 管理 | `openspec --version` 或 `npm list -g @fission-ai/openspec` |
-
-**C. 汇报检查结果：**
-
-列出检查结果：已安装（✅）/ 缺失（❌必须安装）。
-
-对于缺失的依赖，从 [PLUGINS.md](../../reference/PLUGINS.md) 获取安装命令，**直接展示完整安装命令**，明确告知用户这些是项目运行的必要依赖，必须先安装再继续。不要将缺失的依赖描述为"可选"。
-
-所有依赖默认安装到**项目级**（Claude Code 插件加 `--scope project`，npm 包在项目目录执行 `openspec init`）。
-
-### Step 5: CLAUDE.md 处理
+### Step 6: CLAUDE.md 处理
 
 **全新项目：**
 
@@ -149,7 +184,7 @@ Bug 修复：/fix
    e. 写入精简后的 CLAUDE.md
 3. 汇报处理结果（处理了哪些文件，精简了多少内容）
 
-### Step 6: 写入状态文件
+### Step 7: 写入状态文件
 
 写入 `.claude/plugin-state.json`：
 
@@ -178,28 +213,32 @@ Bug 修复：/fix
 }
 ```
 
-### Step 7: 汇报结果
+### Step 8: 汇报结果
 
 ```markdown
 ## /ds:init 完成
 
-**项目类型：** [全新/已有]
-**目录结构：** [新增的目录列表]
-**CLAUDE.md：** [处理结果]
+**项目类型：** [全新/已有/升级]
+**插件版本：** dreamspec vX.X.X（[首次安装/已是最新/已升级: v旧→v新]）
 
 **依赖状态：**
-✅ superpowers（已安装）
-✅ frontend-design（已安装）
-❌ openspec（必须安装 — 执行 `npm install -g @fission-ai/openspec@latest && openspec init`）
+✅ superpowers（已安装，vX.X.X）
+✅ frontend-design（已安装，vX.X.X）
+✅ ui_ux_max_pro（已安装，vX.X.X）
+✅ openspec（已安装，vX.X.X）
 
-缺失的依赖必须明确标注为「必须安装」并提供完整安装命令，不要标为「可选」。
+（如有依赖插件在 Step 3 升级了，标注：🔄 superpowers 已升级 v旧→v新）
+
+**目录结构：** [新增的目录列表]
+**CLAUDE.md：** [处理结果]
 
 **下一步：** /strategy（制定产品战略，完成后自动回填项目信息），待 strategy 完成后再 /build（开始版本交付）
 ```
 
 ## 强制规则
 
+- Step 2 依赖检查为🚫阻断步骤：缺失依赖自动安装，安装失败流程终止，用户解决问题后重新执行
+- Step 3 插件版本检测：汇总主插件和依赖插件的版本信息，由用户决定是否升级，不自动升级
 - 只新增文件和目录，不删除、不修改用户源代码文件（src/、tests/ 等），CLAUDE.md 和 plugin-state.json 在升级时需用户确认后更新
 - CLAUDE.md 必须备份原文件为 `.bak` 后才精简
 - 每次只问一个问题
-- 所有依赖为项目必须安装，缺失时展示完整安装命令并引导用户完成安装
