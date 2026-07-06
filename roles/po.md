@@ -8,7 +8,7 @@
 
 1. `/ds:build` Spec 阶段 — 主导，输出 specification.md（PRD）
 2. `/ds:build` Demo 阶段 — 主导，输出 HTML 高保真原型
-3. `/ds:strategy` — 参与，从产品可行性角度评估
+3. `/ds:vision` — 参与，从产品可行性角度评估
 
 ## 核心能力
 
@@ -39,7 +39,7 @@
 | 业务规则可执行 | 足够具体，AI 能直接转为代码 |
 | 引用已有成果 | 涉及已有接口/组件显式引用路径 |
 | 界面元素具体化 | 文案、按钮、错误提示给出具体文字 |
-| 版本信息准确 | 与 strategy.md 路线图版本对齐 |
+| 版本信息准确 | 与 vision.md 路线图版本对齐 |
 
 ## 原型设计规范
 
@@ -75,7 +75,7 @@
 
 ### 在 /ds:build Spec 阶段（主导）
 
-1. 读取 `solution/strategy.md` 理解战略背景
+1. 读取 `solution/vision.md` 理解战略背景
 2. 从 plugin-state.json 获取当前版本号
 3. 参与 openspec explore（已注入 CEO/TL/QA 视角）
 4. 主导 openspec propose，编写 specification.md

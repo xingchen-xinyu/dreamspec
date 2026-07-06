@@ -11,7 +11,7 @@ claude plugin marketplace add xingchen-xinyu/dreamspec --scope project
 claude plugin install dreamspec@dreamspec-market --scope project
 ```
 
-安装后自动注册以下命令：`/ds:init`  `/ds:strategy`  `/ds:build`  `/ds:fix`
+安装后自动注册以下命令：`/ds:init`  `/ds:vision`  `/ds:build`  `/ds:fix`
 
 依赖自动安装：openspec + superpowers + ui_ux_max_pro
 
@@ -49,7 +49,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 
 ```
 /ds:init          # 配置项目信息，创建目录结构
-/ds:strategy      # 定位产品、规划版本路线
+/ds:vision      # 定位产品、规划版本路线
 /ds:build         # 按版本迭代交付（Explore → Spec → Demo → Build）
 ```
 
@@ -73,7 +73,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 | 命令 | 用途 | 何时用 |
 |------|------|--------|
 | `/ds:init` | 项目初始化/迁移/升级 | 新项目开始、切换到插件模式、插件升级 |
-| `/ds:strategy` | 战略规划 | 0→1 必须，后续按需调整战略 |
+| `/ds:vision` | 产品愿景 | 0→1 必须，后续按需调整战略 |
 | `/ds:build` | 版本交付 | 每个版本迭代 |
 | `/ds:fix` | 问题修复 | Bug 修复 |
 
@@ -95,7 +95,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 
 | 角色 | 负责 | 参与场景 |
 |------|------|---------|
-| **CEO** | 商业价值、战略方向 | `/ds:strategy`（主导）、`/ds:build` Explore |
+| **CEO** | 商业价值、战略方向 | `/ds:vision`（主导）、`/ds:build` Explore |
 | **PO** | 产品设计、Spec、原型 | `/ds:build` Spec + Demo（主导） |
 | **TL** | 技术方案、编码交付 | `/ds:build` Build（主导）、`/ds:fix`（主导） |
 | **QA** | 质量审查、规范检查 | 全流程贯穿 |
@@ -105,7 +105,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 ```
 项目根目录/
 ├── solution/          # 战略、Spec、原型
-│   ├── strategy.md    # 战略规划
+│   ├── vision.md    # 产品愿景
 │   └── v{x}/
 │       ├── specification.md  # PRD（openspec 输出）
 │       ├── tech-design.md    # 技术方案
@@ -113,7 +113,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 ├── src/
 │   ├── server/        # 后端
 │   ├── web/           # 前端
-│   └── ...            # /ds:strategy 后按技术栈扩展
+│   └── ...            # /ds:vision 后按技术栈扩展
 ├── .claude/
 │   └── plugin-state.json
 └── README.md

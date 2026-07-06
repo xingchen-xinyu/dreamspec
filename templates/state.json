@@ -8,7 +8,7 @@
   "status": "init_completed",
   "phases": {
     "init_completed": false,
-    "strategy_completed": false
+    "vision_completed": false
   },
   "techStack": {
     "frontend": [],

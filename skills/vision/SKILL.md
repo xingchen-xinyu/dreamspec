@@ -1,21 +1,21 @@
 ---
-name: ds:strategy
-description: 战略规划 — CEO 主导，PO/TL 参与，制定产品战略和版本路线图
+name: ds:vision
+description: 产品愿景 — CEO 主导，PO/TL 参与，制定产品愿景和版本路线图
 ---
 
-# /ds:strategy — 战略规划
+# /ds:vision — 产品愿景
 
 ## 入口
 
-用户输入 `/ds:strategy` 触发。
+用户输入 `/ds:vision` 触发。
 
 ## 流程
 
 ### 阶段 1: 准备
 
-1. 检查 `solution/ds:strategy.md` 是否存在
-   - 已存在 → 提示用户：本次是更新战略还是重新制定？
-   - 不存在 → 进入新战略制定流程
+1. 检查 `solution/vision.md` 是否存在
+   - 已存在 → 提示用户：本次是更新愿景还是重新制定？
+   - 不存在 → 进入新愿景制定流程
 2. 确保 CEO/PO/TL 角色 Skill 可用
 
 ### 阶段 2: CEO 主导 — 商业分析
@@ -40,7 +40,7 @@ CEO 形成草案后，邀请 PO 和 TL 参与：
 
 ### 阶段 4: CEO 整合
 
-CEO 综合 PO 和 TL 的反馈，形成最终战略方案。
+CEO 综合 PO 和 TL 的反馈，形成最终愿景方案。
 
 ### 阶段 5: 目录扩展
 
@@ -49,27 +49,27 @@ CEO 综合 PO 和 TL 的反馈，形成最终战略方案。
 
 ### 阶段 6: 用户确认
 
-完整呈现战略方案：
+完整呈现愿景方案：
 1. 产品定位与商业模型
 2. 版本路线图
 3. 技术栈确认
 4. 目录结构
 
-等待用户确认后写入 `solution/ds:strategy.md`，更新 `plugin-state.json` 的 `strategy_completed = true`。
+等待用户确认后写入 `solution/vision.md`，更新 `plugin-state.json` 的 `vision_completed = true`。
 
 ### 阶段 7: 项目信息回填
 
-战略方案确认后，将产出信息回填到项目元数据中，完成 init 阶段留下的草稿信息：
+愿景方案确认后，将产出信息回填到项目元数据中，完成 init 阶段留下的草稿信息：
 
-1. 从 `solution/ds:strategy.md` 提取：
-   - **产品名称**：从「产品定位」章节提取（如 strategy 阶段确定了更精确的名称，则覆盖 init 阶段的目录名；否则保留目录名）
+1. 从 `solution/vision.md` 提取：
+   - **产品名称**：从「产品定位」章节提取（如 vision 阶段确定了更精确的名称，则覆盖 init 阶段的目录名；否则保留目录名）
    - **一句话描述**：从「产品定位」章节提取一句定位语（覆盖 init 阶段的空字符串）
    - **技术栈**：从确认的技术选型中提取完整列表
 
 2. 更新 `.claude/plugin-state.json`：
    - `project.name` → 最终产品名称
    - `project.description` → 一句话描述
-   - `phases.strategy_completed` → `true`
+   - `phases.vision_completed` → `true`
    - `techStack` → 完整技术栈信息（已在阶段 5 更新）
 
 3. 更新 `CLAUDE.md` 中的占位内容：
@@ -88,12 +88,12 @@ CEO 综合 PO 和 TL 的反馈，形成最终战略方案。
 
 ## 产出物
 
-- `solution/ds:strategy.md` — 战略规划文档
-- 更新 `plugin-state.json` — 回填 project.name/description + techStack + directories + strategy_completed
+- `solution/vision.md` — 产品愿景文档
+- 更新 `plugin-state.json` — 回填 project.name/description + techStack + directories + vision_completed
 - 更新 `CLAUDE.md` — 回填项目名称、描述、技术栈
 
 ## 强制规则
 
 - 每次只问一个问题，不要一次抛出多个问题
-- 战略方案必须得到用户确认后才能写入文件
+- 愿景方案必须得到用户确认后才能写入文件
 - CEO 是战略决策者，PO/TL 是评估参与者，不替代 CEO 做战略判断
