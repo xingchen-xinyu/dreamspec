@@ -102,7 +102,9 @@ claude plugins list
 
 **C. 汇报检查结果：**
 
-列出检查结果：已安装（✅）/ 缺失（❌），缺失时从 [PLUGINS.md](../../reference/PLUGINS.md) 获取对应的安装命令提示用户。
+列出检查结果：已安装（✅）/ 缺失（❌必须安装）。
+
+对于缺失的依赖，从 [PLUGINS.md](../../reference/PLUGINS.md) 获取安装命令，**直接展示完整安装命令**，明确告知用户这些是项目运行的必要依赖，必须先安装再继续。不要将缺失的依赖描述为"可选"。
 
 所有依赖默认安装到**项目级**（Claude Code 插件加 `--scope project`，npm 包在项目目录执行 `openspec init`）。
 
@@ -183,8 +185,14 @@ Bug 修复：/fix
 
 **项目类型：** [全新/已有]
 **目录结构：** [新增的目录列表]
-**依赖状态：** [各依赖检查结果]
 **CLAUDE.md：** [处理结果]
+
+**依赖状态：**
+✅ superpowers（已安装）
+✅ frontend-design（已安装）
+❌ openspec（必须安装 — 执行 `npm install -g @fission-ai/openspec@latest && openspec init`）
+
+缺失的依赖必须明确标注为「必须安装」并提供完整安装命令，不要标为「可选」。
 
 **下一步：** /strategy（制定产品战略，完成后自动回填项目信息），待 strategy 完成后再 /build（开始版本交付）
 ```
@@ -194,4 +202,4 @@ Bug 修复：/fix
 - 只新增文件和目录，不删除、不修改用户源代码文件（src/、tests/ 等），CLAUDE.md 和 plugin-state.json 在升级时需用户确认后更新
 - CLAUDE.md 必须备份原文件为 `.bak` 后才精简
 - 每次只问一个问题
-- 依赖缺失不阻塞，给出安装命令即可
+- 所有依赖为项目必须安装，缺失时展示完整安装命令并引导用户完成安装
