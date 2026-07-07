@@ -25,32 +25,48 @@ description: 项目初始化/迁移 — 依赖就绪保障 → 项目配置 → 
 
 > **红线：依赖是后续流程的前置条件，所有依赖必须安装成功后才能继续。安装失败则流程终止，用户解决问题后重新执行。**
 
-依赖分为两类，分别检查。详细安装命令参考 [PLUGINS.md](../../reference/PLUGINS.md)。
+依赖检测采用**两级模式**：先检查设备级（全局是否安装），再检查项目级（当前项目是否已配置）。两级都满足才算"已就绪"。
 
-**A. Claude Code 插件**（检查是否已安装）：
+**A. Claude Code 插件**（检查项目级是否就绪）：
 
-执行 `claude plugins list` 检查：
+执行 `claude plugins list` 获取已安装列表，然后检查项目的 `.claude/` 目录下是否有对应插件的配置目录：
 
-| 依赖 | 用途 | 检查方式 |
-|------|------|---------|
-| superpowers | TDD + 多Agent + CodeReview + Debugging | `claude plugins list` 中是否包含 `superpowers` |
-| ui_ux_max_pro | HTML 原型设计 | `claude plugins list` 中是否包含 `ui-ux-pro-max` |
-| frontend-design | 前端 UI 组件设计与生成 | `claude plugins list` 中是否包含 `frontend-design` |
+| 依赖 | 用途 | 设备级检测 | 项目级检测 |
+|------|------|-----------|-----------|
+| superpowers | TDD + 多Agent + CodeReview + Debugging | `claude plugins list` 中是否包含 `superpowers` | `.claude/` 下是否有 superpowers 相关配置 |
+| ui_ux_max_pro | HTML 原型设计 | `claude plugins list` 中是否包含 `ui-ux-pro-max` | `.claude/` 下是否有 ui-ux-pro-max 相关配置 |
+| frontend-design | 前端 UI 组件设计与生成 | `claude plugins list` 中是否包含 `frontend-design` | `.claude/` 下是否有 frontend-design 相关配置 |
 
-**B. npm 全局包**（检查是否已安装）：
+> **判定规则：** 设备级满足 + 项目级满足 → 已就绪，跳过安装。设备级满足但项目级缺失（如新项目、全局安装了但项目级没有）→ 仍需执行项目级安装。设备级缺失 → 完整安装。
 
-| 依赖 | 用途 | 检查方式 |
-|------|------|---------|
-| openspec | Spec 编写 + Tasks 管理 | `openspec --version` 或 `npm list -g @fission-ai/openspec` |
+**B. openspec**（检查项目级是否就绪）：
 
-**C. 自动安装缺失依赖：**
+| 依赖 | 用途 | 设备级检测 | 项目级检测 |
+|------|------|-----------|-----------|
+| openspec | Spec 编写 + Tasks 管理 | `openspec --version` 是否可用 | 项目根目录下 `openspec/` 目录是否存在 |
 
-1. 汇总所有缺失的依赖
-2. 对每个缺失依赖，从 [PLUGINS.md](../../reference/PLUGINS.md) 获取安装命令并**自动执行安装**
-3. 所有依赖默认安装到**项目级**（Claude Code 插件加 `--scope project`，npm 包在项目目录执行 `openspec init`）
-4. 安装结果：
-   - ✅ 全部安装成功 → 进入 Step 3
-   - ❌ 任一安装失败 → **流程终止**，展示失败原因和手动安装命令，提示用户解决问题后重新执行 `/ds:init`
+> **判定规则：** 设备级（全局 npm 包）+ 项目级（`openspec/` 目录）两级都满足才算"已就绪"。**openspec 全局安装 ≠ 当前项目已配置**——每个项目必须独立执行 `openspec init` 生成 `openspec/` 目录。新项目目录下即使全局已安装 openspec，也必须执行项目级配置。
+
+**C. 按需安装（只执行缺失的层级）：**
+
+| 依赖 | 缺失情况 | 需执行的步骤 |
+|------|---------|-------------|
+| **openspec** | 仅项目级缺失（全局已安装） | ② `cd <项目根目录>` ③ `openspec init` ④ `openspec config profile`（选择 expanded workflows 扩展模式） ⑤ `openspec update` |
+| **openspec** | 设备级 + 项目级都缺失 | ① `npm install -g @fission-ai/openspec@latest` ② `cd <项目根目录>` ③ `openspec init` ④ `openspec config profile` ⑤ `openspec update` |
+| **superpowers** / **frontend-design** | 任意级别缺失 | `claude plugins install <plugin>@claude-plugins-official --scope project`（幂等，已安装则跳过） |
+| **ui_ux_max_pro** | 任意级别缺失 | ① `claude plugins marketplace add nextlevelbuilder/ui-ux-pro-max-skill` ② `claude plugins install ui-ux-pro-max@ui-ux-pro-max-skill --scope project`（幂等） |
+
+> **红线：** openspec 的项目级配置（步骤 ②③④⑤）是**最容易遗漏**的环节——设备全局已安装 openspec 时，AI 容易错误地判定为"已就绪"而跳过。必须检查 `openspec/` 目录是否存在，不存在就强制执行项目级配置。openspec config profile 和 update 是启用扩展模式（explore → propose → apply）的必要步骤，缺一不可。
+
+**D. 安装后验证：**
+
+每个依赖安装完成后，立即验证是否真正可用：
+- Claude Code 插件：执行 `claude plugins list` 确认插件出现在列表中；**并且**实际调用该插件的任意一个 skill 命令确认可用（如 `/superpowers:brainstorming`），如果插件已安装但 skill 未激活，提示用户在 Claude Code 中手动启用该插件
+- openspec：执行 `openspec --version` 确认命令可用；**并且**检查项目目录下 `openspec/` 目录是否已生成
+
+**E. 安装结果：**
+- ✅ 全部安装成功且验证通过 → 进入 Step 3
+- ❌ 任一安装失败或验证不通过 → **流程终止**，展示失败原因和手动安装命令，提示用户解决问题后重新执行 `/ds:init`
 
 > **💡 提示：** 如果已通过 `/ds:upgrade` 安装过依赖，此步骤所有检测项将全部跳过，直接进入 Step 3。
 
