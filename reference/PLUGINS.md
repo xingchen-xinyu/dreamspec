@@ -11,7 +11,7 @@
 ### DreamSpec（本插件）
 
 - **类型：** Claude Code 插件
-- **用途：** AI Agent 创业开发团队协作 — 提供 `/ds:init` `/ds:vision` `/ds:build` `/ds:fix` 等命令
+- **用途：** AI Agent 创业开发团队协作 — 提供 `/ds:init` `/ds:upgrade` `/ds:vision` `/ds:build` `/ds:fix` 等命令
 - **开源地址：** https://github.com/xingchen-xinyu/dreamspec
 - **安装命令：**
   ```bash

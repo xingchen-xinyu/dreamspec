@@ -8,7 +8,8 @@
 
 ```
 skills/          # 命令入口（编排器）
-  init/SKILL.md        # /ds:init 项目初始化/迁移/升级
+  init/SKILL.md        # /ds:init 项目初始化/迁移
+  upgrade/SKILL.md     # /ds:upgrade 插件版本检测与升级
   vision/SKILL.md      # /ds:vision 产品愿景
   build/SKILL.md       # /ds:build 版本交付
   fix/SKILL.md         # /ds:fix 问题修复
@@ -39,3 +40,4 @@ templates/       # 项目模板
 - 修改 Skill 文件后无需重新安装，Claude Code 自动加载
 - 测试方式：在新项目目录中安装插件，验证各命令行为
 - 版本号遵循 semver
+- 插件每次升级时，检查 README.md 是否需要同步更新（新增命令、流程变化、配置变更等），确保文档与最新版本一致
