@@ -69,7 +69,7 @@ description: 依赖管理 + 插件升级 — 检测与安装缺失依赖 → 更
 **D. 安装后验证：**
 
 每个依赖安装完成后，立即验证是否真正可用：
-- Claude Code 插件：执行 `claude plugins list` 确认插件出现在列表中；**并且**实际调用该插件的任意一个 skill 命令确认可用（如 `/superpowers:brainstorming`），如果插件已安装但 skill 未激活，提示用户在 Claude Code 中手动启用该插件
+- Claude Code 插件：执行 `claude plugins list` 确认插件出现在列表中；
 - openspec：执行 `openspec --version` 确认命令可用；**并且**检查项目目录下 `openspec/` 目录是否已生成
 
 **E. 安装结果：**
