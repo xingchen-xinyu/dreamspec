@@ -39,5 +39,9 @@ templates/       # 项目模板
 
 - 修改 Skill 文件后无需重新安装，Claude Code 自动加载
 - 测试方式：在新项目目录中安装插件，验证各命令行为
-- 版本号遵循 semver
+- 版本号遵循 semver，每次修改自动识别变更性质并升级版本：
+  - **Major**（X.0.0）：破坏性变更 — 移除命令、重命名入口、不兼容的配置格式变更
+  - **Minor**（x.Y.0）：新增功能 — 新增命令入口、新增 Skill、新增角色
+  - **Patch**（x.y.Z）：修复与优化 — Bug 修复、文档更新、流程优化、代码清理
+  - 版本号必须同步更新 `.claude-plugin/plugin.json` 和 `.claude-plugin/marketplace.json` 两处，缺一不可
 - 插件每次升级时，检查 README.md 是否需要同步更新（新增命令、流程变化、配置变更等），确保文档与最新版本一致
