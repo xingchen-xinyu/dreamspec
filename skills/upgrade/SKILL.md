@@ -127,13 +127,14 @@ claude plugin marketplace update ui-ux-pro-max-skill
 
 任一 marketplace 更新失败 → 不阻塞，记录并继续。
 
-2. 获取 dreamspec 远端最新版本（使用 Fetch 工具，不可读本地缓存）：
+2. 尝试获取 dreamspec 远端最新版本（使用 Fetch 工具，**失败不阻塞**）：
 
 ```
 Fetch: https://raw.githubusercontent.com/xingchen-xinyu/dreamspec/main/.claude-plugin/plugin.json
 ```
 
-从返回 JSON 的 `version` 字段获取远端最新版本号。
+- **Fetch 成功** → 从返回 JSON 的 `version` 字段获取远端版本号，在 A3 版本表中展示
+- **Fetch 失败**（网络限制/安全策略拦截）→ 版本表中 dreamspec 的「最新版本」列显示 `—`（无法检测），不影响后续升级流程（A5 的 `claude plugin update` 是版本判断的最终权威）
 
 ## Step A3: 汇总版本
 
@@ -240,9 +241,10 @@ dreamspec 自身升级后，检查项目状态是否需要同步：
 
 # 模式 B：仅升级 DreamSpec
 
-> 跳过依赖检测，仅升级 DreamSpec 主插件。流程精简为 5 步，适合日常跟进。
+> 跳过依赖检测，仅升级 DreamSpec 主插件。流程精简，适合日常跟进。
+> **核心策略**：`claude plugin update` 命令自身具备"已是最新则跳过"能力，是版本判断的最终权威。Fetch 远端版本仅作为辅助展示，失败不阻塞。
 
-## Step B1: 获取 dreamspec 远端版本
+## Step B1: 刷新 marketplace + 尝试获取远端版本
 
 1. 刷新 dreamspec marketplace：
 
@@ -252,24 +254,23 @@ claude plugin marketplace update dreamspec-market
 
 更新失败 → 不阻塞，记录并继续。
 
-2. 获取 dreamspec 远端最新版本（使用 Fetch 工具，不可读本地缓存）：
+2. 尝试获取远端最新版本（使用 Fetch 工具，**失败不阻塞**）：
 
 ```
 Fetch: https://raw.githubusercontent.com/xingchen-xinyu/dreamspec/main/.claude-plugin/plugin.json
 ```
 
-从返回 JSON 的 `version` 字段获取远端最新版本号。
+- **Fetch 成功** → 从返回 JSON 的 `version` 字段获取远端版本号，进入 Step B2 展示版本对比
+- **Fetch 失败**（网络限制/安全策略拦截）→ 跳过版本对比，直接进入 Step B3 确认升级（此时不展示具体版本号差异）
 
-## Step B2: 版本对比
-
-仅展示 dreamspec 版本对比：
+## Step B2: 版本对比（仅在 Fetch 成功时执行）
 
 ```markdown
 📦 DreamSpec 版本检测
 
 | 插件 | 当前版本 | 最新版本 | 状态 |
 |------|---------|---------|------|
-| dreamspec | 1.4.4 | 1.4.5 | 🔄 可升级 |
+| dreamspec | 1.4.4 | 1.5.3 | 🔄 可升级 |
 ```
 
 如果已是最新版本，直接告知用户并结束流程：
@@ -278,22 +279,31 @@ Fetch: https://raw.githubusercontent.com/xingchen-xinyu/dreamspec/main/.claude-p
 
 ## Step B3: 用户确认
 
+**Fetch 成功时：**
+
 > DreamSpec 有新版本 vX.X.X（当前 vX.X.X），是否升级？
+
+**Fetch 失败时：**
+
+> 无法获取远端版本号（网络限制）。是否尝试升级 DreamSpec？
 >
-> 升级仅更新 DreamSpec 主插件，不会检测或修改依赖插件。
+> 升级命令会自动判断：如果已是最新版本则跳过，如果有新版本则自动更新。不会影响依赖插件。
 
 - 用户确认 → 进入 Step B4
 - 用户跳过 → 流程结束
 
 ## Step B4: 执行升级
 
-仅升级 DreamSpec 自身：
+> **不手动比对版本号。** 直接执行 `claude plugin update`，该命令是版本判断的最终权威。
 
 ```
 claude plugin update dreamspec@dreamspec-market --scope project
 ```
 
-升级命令输出即表明结果（已更新 / 已是最新 / 失败）。
+从命令输出中提取升级结果：
+- 输出包含 `Updated` / ` upgraded` 等关键词 → 升级成功，提取版本变化信息
+- 输出包含 `Already up to date` / `已是最新` 等关键词 → 已是最新，无需升级
+- 输出包含错误信息 → 升级失败
 
 **升级失败处理：** 展示失败信息和手动修复命令。
 
@@ -303,17 +313,40 @@ claude plugin update dreamspec@dreamspec-market --scope project
 
 合规复检内容同模式 A Step A6，检查 DreamSpec 升级后项目结构是否需要同步。
 
-汇报：
+汇报（根据实际结果选择模板）：
+
+**升级成功：**
 
 ```markdown
 ## /ds:upgrade（仅升级 DreamSpec）完成
 
 **🔄 升级结果：**
-✅ dreamspec 已升级 v1.4.4 → v1.4.5
+✅ dreamspec 已升级 v1.4.4 → v1.5.3
 
 **📋 合规复检：**（仅已 init 项目展示）
 ✅ 项目结构完整，无需同步
 （或：⚠️ 发现 X 项变更，建议运行 /ds:init 同步）
+```
+
+**已是最新：**
+
+```markdown
+## /ds:upgrade（仅升级 DreamSpec）完成
+
+**🔄 升级结果：**
+✅ dreamspec 已是最新版本（vX.X.X），无需升级
+```
+
+**Fetch 失败但升级成功：**
+
+```markdown
+## /ds:upgrade（仅升级 DreamSpec）完成
+
+**🔄 升级结果：**
+✅ dreamspec 已升级至最新版本（从命令输出提取版本变化）
+
+**📋 合规复检：**（仅已 init 项目展示）
+...
 ```
 
 ---
