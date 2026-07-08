@@ -232,7 +232,7 @@ dreamspec 自身升级后，检查项目状态是否需要同步：
 
 # 模式 B：仅升级 DreamSpec
 
-> 跳过依赖检测，仅升级 DreamSpec 主插件。流程精简，适合日常跟进。
+> 跳过依赖检测，仅升级 DreamSpec 主插件。用户选择此模式即已表明升级意图，不二次确认。
 > **核心策略**：不预先检测版本，直接执行 `claude plugin update`——命令自身判断有无更新并输出结果。
 
 ## Step B1: 刷新 marketplace
@@ -243,16 +243,7 @@ claude plugin marketplace update dreamspec-market
 
 更新失败 → 不阻塞，记录并继续。
 
-## Step B2: 用户确认
-
-> 当前 DreamSpec 版本为 vX.X.X（从前置条件获取）。是否尝试升级到最新版本？
->
-> 升级命令会自动判断：如果已是最新版本则跳过，如果有新版本则自动更新。不会影响依赖插件。
-
-- 用户确认 → 进入 Step B3
-- 用户跳过 → 流程结束
-
-## Step B3: 执行升级
+## Step B2: 执行升级
 
 > **不手动比对版本号。** 直接执行 `claude plugin update`，该命令是版本判断的最终权威。
 
@@ -267,7 +258,7 @@ claude plugin update dreamspec@dreamspec-market --scope project
 
 **升级失败处理：** 展示失败信息和手动修复命令。
 
-## Step B4: 合规复检与汇报
+## Step B3: 合规复检与汇报
 
 > **仅在项目已初始化时执行**（`.claude/plugin-state.json` 存在）。
 
