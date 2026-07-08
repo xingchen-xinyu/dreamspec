@@ -22,15 +22,9 @@ description: 依赖管理 + 插件升级 — 支持全量更新和仅升级 Drea
 
 ## 前置条件
 
-1. 执行 `claude plugins list` 检查输出中是否包含 `dreamspec`
-   - 如果不存在 → 提示用户先安装 DreamSpec 插件（安装命令详见 [PLUGINS.md](../../reference/PLUGINS.md) DreamSpec 条目），流程终止
-   - 如果存在 → 从输出中提取版本号，继续流程
-
-2. 读取 [PLUGINS.md](../../reference/PLUGINS.md) 获取各插件的 marketplace 和升级命令
-
-3. 检查 `.claude/plugin-state.json` 是否存在：
-   - **存在** → 完整模式：合规复检可用
-   - **不存在** → 简化模式：项目尚未初始化，跳过合规复检
+检查 `.claude/plugin-state.json` 是否存在：
+- **存在** → 完整模式：合规复检可用
+- **不存在** → 简化模式：项目尚未初始化，跳过合规复检
 
 ---
 
