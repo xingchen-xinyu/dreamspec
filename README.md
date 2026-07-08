@@ -7,7 +7,9 @@
 ```bash
 # Step 1: 注册 marketplace
 claude plugin marketplace add xingchen-xinyu/dreamspec --scope project
-# Step 2: 安装插件
+# Step 2: 刷新 marketplace 缓存（获取最新版本）
+claude plugin marketplace update dreamspec-market
+# Step 3: 安装插件
 claude plugin install dreamspec@dreamspec-market --scope project
 ```
 
@@ -66,6 +68,7 @@ claude plugin uninstall dreamspec@dreamspec-market
 ```bash
 mkdir my-app && cd my-app
 claude plugin marketplace add xingchen-xinyu/dreamspec --scope project
+claude plugin marketplace update dreamspec-market
 claude plugin install dreamspec@dreamspec-market --scope project
 ```
 
@@ -73,7 +76,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 
 ```
 /ds:init          # 配置项目信息，创建目录结构，合规检测
-/ds:vision        # 定位产品、规划版本路线
+/ds:vision        # 精简访谈 + 分步确认，制定产品愿景与战略
 /ds:build         # 按版本迭代交付（Explore → Spec → Demo → Build）
 ```
 
@@ -82,6 +85,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 ```bash
 cd existing-project
 claude plugin marketplace add xingchen-xinyu/dreamspec --scope project
+claude plugin marketplace update dreamspec-market
 claude plugin install dreamspec@dreamspec-market --scope project
 ```
 
@@ -98,7 +102,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 |------|------|--------|
 | `/ds:init` | 项目初始化/迁移 + 合规检测 | 新项目开始、切换到插件模式（自动安装缺失依赖）|
 | `/ds:upgrade` | 依赖管理 + 插件升级 | 安装缺失依赖，检查并升级主插件及依赖插件，支持 `--force` 强制覆盖 |
-| `/ds:vision` | 产品愿景 | 0→1 必须，后续按需调整战略 |
+| `/ds:vision` | 产品愿景 | 0→1 必须：精简访谈 → 分步确认，产出产品宪法（含待细化方向），后续按需调整战略 |
 | `/ds:build` | 版本交付 | 每个版本迭代 |
 | `/ds:fix` | 问题修复 | Bug 修复 |
 

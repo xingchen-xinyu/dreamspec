@@ -1,0 +1,10 @@
+{
+  "extraKnownMarketplaces": {
+    "dreamspec-market": {
+      "source": {
+        "source": "github",
+        "repo": "xingchen-xinyu/dreamspec"
+      }
+    }
+  }
+}
