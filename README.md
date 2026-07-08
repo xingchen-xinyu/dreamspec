@@ -26,10 +26,10 @@ claude plugin install dreamspec@dreamspec-market --scope project
 在 Claude Code 中运行：
 
 ```
-/ds:upgrade       # 启动后选择升级模式
+/ds:upgrade       # 启动后上下箭头选择升级模式，回车确认
 ```
 
-启动后会询问选择模式：
+启动后通过选项菜单选择模式（上下箭头切换，回车确认）：
 
 | 模式 | 说明 | 适用场景 |
 |------|------|---------|

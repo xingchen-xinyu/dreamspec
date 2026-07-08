@@ -36,14 +36,29 @@ description: 依赖管理 + 插件升级 — 支持全量更新和仅升级 Drea
 
 ## 模式选择
 
-前置条件检查完成后，**首先询问用户选择升级模式**：
+前置条件检查完成后，**使用 AskUserQuestion 工具让用户选择升级模式**（单选，上下箭头切换，回车确认）：
 
-> 选择升级模式：
-> **A. 全量更新** — 检测所有依赖（superpowers、frontend-design、ui_ux_max_pro、openspec），并升级全部插件到最新版本
-> **B. 仅升级 DreamSpec** — 跳过依赖检测，只升级 DreamSpec 主插件（更快，适合日常跟进）
+```json
+{
+  "questions": [{
+    "question": "选择升级模式",
+    "header": "升级模式",
+    "options": [
+      {
+        "label": "全量更新",
+        "description": "检测所有依赖（superpowers、frontend-design、ui_ux_max_pro、openspec），并升级全部插件到最新版本"
+      },
+      {
+        "label": "仅升级 DreamSpec",
+        "description": "跳过依赖检测，只升级 DreamSpec 主插件（更快，适合日常跟进）"
+      }
+    ]
+  }]
+}
+```
 
-- 用户选 A → 进入「全量更新」流程
-- 用户选 B → 进入「仅升级 DreamSpec」流程
+- 用户选「全量更新」→ 进入模式 A
+- 用户选「仅升级 DreamSpec」→ 进入模式 B
 
 ---
 
