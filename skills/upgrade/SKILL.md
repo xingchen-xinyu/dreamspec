@@ -122,7 +122,7 @@ Fetch: https://raw.githubusercontent.com/xingchen-xinyu/dreamspec/main/.claude-p
 
 ## Step A3: 汇总版本
 
-执行 `claude plugins list` 获取已安装版本，结合 `openspec --version`，与 dreamspec 远端版本对比展示：
+执行 `claude plugins list` 获取已安装版本（如前置条件中已获取可复用），结合 `openspec --version`，与 dreamspec 远端版本对比展示：
 
 ```markdown
 📦 插件版本检测
