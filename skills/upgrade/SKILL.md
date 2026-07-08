@@ -1,13 +1,18 @@
 ---
 name: ds:upgrade
-description: 依赖管理 + 插件升级 — 检测与安装缺失依赖 → 更新 marketplace → 批量升级
+description: 依赖管理 + 插件升级 — 支持全量更新和仅升级 DreamSpec 两种模式
 ---
 
 # /ds:upgrade — 依赖管理 + 插件版本检测与升级
 
 ## 定位
 
-`/ds:upgrade` 是 DreamSpec 的依赖管家——管安装、管升级、管合规。可在任意安装了 DreamSpec 插件的目录中独立运行，不依赖项目是否已初始化。
+`/ds:upgrade` 是 DreamSpec 的依赖管家——管安装、管升级、管合规。支持两种模式：
+
+- **全量更新**：检测所有依赖并升级全部插件
+- **仅升级 DreamSpec**：跳过依赖检测，只升级主插件（更快）
+
+可在任意安装了 DreamSpec 插件的目录中独立运行，不依赖项目是否已初始化。
 
 > **提示：** 如果直接运行 `/ds:init`，init 也会自动安装依赖（采用阻断策略）。无论先跑哪个命令，最终依赖都会就绪。
 
@@ -24,12 +29,29 @@ description: 依赖管理 + 插件升级 — 检测与安装缺失依赖 → 更
 2. 读取 [PLUGINS.md](../../reference/PLUGINS.md) 获取各插件的 marketplace 和升级命令
 
 3. 检查 `.claude/plugin-state.json` 是否存在：
-   - **存在** → 完整模式：安装 + 版本对比 + 升级 + 合规复检
-   - **不存在** → 依赖模式：安装 + 版本检测（项目尚未初始化，跳过合规复检）
+   - **存在** → 完整模式：合规复检可用
+   - **不存在** → 简化模式：项目尚未初始化，跳过合规复检
 
-## 流程
+---
 
-### Step 1: 依赖检测与安装 ⚠️非阻断
+## 模式选择
+
+前置条件检查完成后，**首先询问用户选择升级模式**：
+
+> 选择升级模式：
+> **A. 全量更新** — 检测所有依赖（superpowers、frontend-design、ui_ux_max_pro、openspec），并升级全部插件到最新版本
+> **B. 仅升级 DreamSpec** — 跳过依赖检测，只升级 DreamSpec 主插件（更快，适合日常跟进）
+
+- 用户选 A → 进入「全量更新」流程
+- 用户选 B → 进入「仅升级 DreamSpec」流程
+
+---
+
+# 模式 A：全量更新
+
+> 完整走全部 7 步：依赖检测 → marketplace 更新 → 版本汇总 → 确认 → 执行升级 → 合规复检 → 汇报。
+
+## Step A1: 依赖检测与安装 ⚠️非阻断
 
 > 自动检测并安装缺失的依赖插件。安装失败不阻断流程，记录警告后继续。
 
@@ -73,12 +95,12 @@ description: 依赖管理 + 插件升级 — 检测与安装缺失依赖 → 更
 - openspec：执行 `openspec --version` 确认命令可用；**并且**检查项目目录下 `openspec/` 目录是否已生成
 
 **E. 安装结果：**
-- ✅ 全部安装成功 → 进入 Step 2
-- ⚠️ 部分/全部安装失败 → **记录警告**，展示失败原因和手动安装命令，继续 Step 2（不阻断）
+- ✅ 全部安装成功 → 进入 Step A2
+- ⚠️ 部分/全部安装失败 → **记录警告**，展示失败原因和手动安装命令，继续 Step A2（不阻断）
 
 > 与 `/ds:init` Step 2 的区别：init 中依赖是后续流程的前置条件，安装失败必须终止（🚫阻断）；upgrade 中依赖安装失败不影响版本检测和升级流程（⚠️警告）。
 
-### Step 2: 更新 marketplace + 获取 dreamspec 远端版本
+## Step A2: 更新 marketplace + 获取 dreamspec 远端版本
 
 1. 刷新所有相关 marketplace（仅刷新缓存，不修改插件文件）：
 
@@ -98,7 +120,7 @@ Fetch: https://raw.githubusercontent.com/xingchen-xinyu/dreamspec/main/.claude-p
 
 从返回 JSON 的 `version` 字段获取远端最新版本号。
 
-### Step 3: 汇总版本
+## Step A3: 汇总版本
 
 执行 `claude plugins list` 获取已安装版本，结合 `openspec --version`，与 dreamspec 远端版本对比展示：
 
@@ -107,16 +129,16 @@ Fetch: https://raw.githubusercontent.com/xingchen-xinyu/dreamspec/main/.claude-p
 
 | 插件 | 当前版本 | 最新版本 | 状态 |
 |------|---------|---------|------|
-| dreamspec | 1.3.1 | 1.3.2 | 🔄 可升级 |
+| dreamspec | 1.4.4 | 1.4.5 | 🔄 可升级 |
 | superpowers | 2.0.0 | — | ✅ 已是最新 |
 | frontend-design | 1.2.0 | — | ✅ 已是最新 |
 | ui_ux_max_pro | — | — | ⚠️ 未安装 |
 | openspec | 1.5.0 | — | ✅ 已是最新 |
 ```
 
-> 依赖插件不手动比对版本号——`claude plugin update` 命令自带"已是最新则跳过"能力，在 Step 5 执行时自动判断。
+> 依赖插件不手动比对版本号——`claude plugin update` 命令自带"已是最新则跳过"能力，在 Step A5 执行时自动判断。
 
-### Step 4: 用户确认
+## Step A4: 用户确认
 
 直接询问用户：
 
@@ -124,10 +146,10 @@ Fetch: https://raw.githubusercontent.com/xingchen-xinyu/dreamspec/main/.claude-p
 >
 > 升级命令会自动跳过已是最新版本的插件，不会重复安装。
 
-- 用户确认 → 进入 Step 5
+- 用户确认 → 进入 Step A5
 - 用户跳过 → 流程结束
 
-### Step 5: 执行升级
+## Step A5: 执行升级
 
 > **原理：** 不手动比对版本号（容易出错）。直接执行 `claude plugin update`，该命令本身就具备"已是最新则跳过"的能力。
 
@@ -139,8 +161,8 @@ Fetch: https://raw.githubusercontent.com/xingchen-xinyu/dreamspec/main/.claude-p
 3. frontend-design：`claude plugin update frontend-design@claude-plugins-official --scope project`
 4. ui_ux_max_pro：`claude plugin marketplace update ui-ux-pro-max-skill` → `claude plugin update ui-ux-pro-max@ui-ux-pro-max-skill --scope project`
 
-> Step 1 中已安装的依赖：`claude plugin update` 会自动判断为"已是最新"，无需特殊处理。
-> Step 1 中安装失败的依赖：跳过升级步骤，报告中标注。
+> Step A1 中已安装的依赖：`claude plugin update` 会自动判断为"已是最新"，无需特殊处理。
+> Step A1 中安装失败的依赖：跳过升级步骤，报告中标注。
 
 **主插件（最后执行）：**
 5. dreamspec：`claude plugin update dreamspec@dreamspec-market --scope project`
@@ -156,7 +178,7 @@ Fetch: https://raw.githubusercontent.com/xingchen-xinyu/dreamspec/main/.claude-p
 - 任一插件升级失败 → 不阻塞流程，记录失败信息，继续下一个
 - 最终报告中标注失败项及手动修复命令
 
-### Step 6: 合规复检
+## Step A6: 合规复检
 
 > **仅在项目已初始化时执行**（`.claude/plugin-state.json` 存在）。项目未初始化则跳过此步骤。
 
@@ -172,10 +194,10 @@ dreamspec 自身升级后，检查项目状态是否需要同步：
   - 如有不合规 → 提示用户运行 /ds:init 同步
 ```
 
-### Step 7: 汇报结果
+## Step A7: 汇报结果
 
 ```markdown
-## /ds:upgrade 完成
+## /ds:upgrade（全量更新）完成
 
 **📦 依赖安装：**
 ✅ superpowers（已安装，vX.X.X）
@@ -186,7 +208,7 @@ dreamspec 自身升级后，检查项目状态是否需要同步：
 **🔄 升级结果：**
 | 插件 | 结果 |
 |------|------|
-| dreamspec | ✅ 已升级 v1.3.1 → v1.3.2 |
+| dreamspec | ✅ 已升级 v1.4.4 → v1.4.5 |
 | superpowers | ✅ 已是最新 (vX.X.X) |
 | frontend-design | ✅ 已是最新 (vX.X.X) |
 | ui_ux_max_pro | ⚠️ 未安装，已跳过 |
@@ -199,12 +221,96 @@ dreamspec 自身升级后，检查项目状态是否需要同步：
 （或：⚠️ 发现 X 项变更，建议运行 /ds:init 同步）
 ```
 
+---
+
+# 模式 B：仅升级 DreamSpec
+
+> 跳过依赖检测，仅升级 DreamSpec 主插件。流程精简为 5 步，适合日常跟进。
+
+## Step B1: 获取 dreamspec 远端版本
+
+1. 刷新 dreamspec marketplace：
+
+```
+claude plugin marketplace update dreamspec-market
+```
+
+更新失败 → 不阻塞，记录并继续。
+
+2. 获取 dreamspec 远端最新版本（使用 Fetch 工具，不可读本地缓存）：
+
+```
+Fetch: https://raw.githubusercontent.com/xingchen-xinyu/dreamspec/main/.claude-plugin/plugin.json
+```
+
+从返回 JSON 的 `version` 字段获取远端最新版本号。
+
+## Step B2: 版本对比
+
+仅展示 dreamspec 版本对比：
+
+```markdown
+📦 DreamSpec 版本检测
+
+| 插件 | 当前版本 | 最新版本 | 状态 |
+|------|---------|---------|------|
+| dreamspec | 1.4.4 | 1.4.5 | 🔄 可升级 |
+```
+
+如果已是最新版本，直接告知用户并结束流程：
+
+> DreamSpec 已是最新版本（vX.X.X），无需升级。
+
+## Step B3: 用户确认
+
+> DreamSpec 有新版本 vX.X.X（当前 vX.X.X），是否升级？
+>
+> 升级仅更新 DreamSpec 主插件，不会检测或修改依赖插件。
+
+- 用户确认 → 进入 Step B4
+- 用户跳过 → 流程结束
+
+## Step B4: 执行升级
+
+仅升级 DreamSpec 自身：
+
+```
+claude plugin update dreamspec@dreamspec-market --scope project
+```
+
+升级命令输出即表明结果（已更新 / 已是最新 / 失败）。
+
+**升级失败处理：** 展示失败信息和手动修复命令。
+
+## Step B5: 合规复检与汇报
+
+> **仅在项目已初始化时执行**（`.claude/plugin-state.json` 存在）。
+
+合规复检内容同模式 A Step A6，检查 DreamSpec 升级后项目结构是否需要同步。
+
+汇报：
+
+```markdown
+## /ds:upgrade（仅升级 DreamSpec）完成
+
+**🔄 升级结果：**
+✅ dreamspec 已升级 v1.4.4 → v1.4.5
+
+**📋 合规复检：**（仅已 init 项目展示）
+✅ 项目结构完整，无需同步
+（或：⚠️ 发现 X 项变更，建议运行 /ds:init 同步）
+```
+
+---
+
 ## 强制规则
 
-- Step 1 依赖安装为非阻断步骤：安装失败记录警告，不影响后续版本检测和升级流程
+- **模式选择前置**：前置条件检查完成后，必须先让用户选择模式（A/B），再进入对应流程
+- 模式 A 依赖安装为非阻断步骤：安装失败记录警告，不影响后续版本检测和升级流程
+- 模式 B 不执行任何依赖检测和依赖升级操作
 - 不手动比对版本号，依赖 `claude plugin update` 命令自身的"已是最新则跳过"能力
-- 升级前先更新所有 marketplace，确保获取最新版本信息
+- 升级前先更新 marketplace，确保获取最新版本信息
 - 升级前必须用户确认，不自动升级
 - 升级失败不阻断流程，记录失败信息，继续下一个插件
 - 只升级插件本身，不修改用户源代码文件（src/ 等）
-- Step 6 合规复检仅在项目已初始化时执行
+- 合规复检仅在项目已初始化时执行
