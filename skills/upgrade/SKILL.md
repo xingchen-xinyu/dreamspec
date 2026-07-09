@@ -39,12 +39,12 @@ description: 依赖管理 + 插件升级 — 支持全量更新和仅升级 Drea
     "header": "升级模式",
     "options": [
       {
-        "label": "全量更新",
-        "description": "检测所有依赖（superpowers、frontend-design、ui_ux_max_pro、openspec），并升级全部插件到最新版本"
-      },
-      {
         "label": "仅升级 DreamSpec",
         "description": "跳过依赖检测，只升级 DreamSpec 主插件（更快，适合日常跟进）"
+      },
+      {
+        "label": "全量更新",
+        "description": "检测所有依赖（superpowers、frontend-design、ui_ux_max_pro、openspec），并升级全部插件到最新版本"
       }
     ]
   }]
