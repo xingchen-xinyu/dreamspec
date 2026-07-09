@@ -132,9 +132,14 @@ src/web/     # 前端
 
 ## 工作方式
 
+> **自动路由规则：** 当你在项目目录下描述开发/修复/优化/重构需求时，
+> AI 会自动加载 build 技能进入版本开发流程。
+> 纯问答、代码查看、讨论不触发。显式调用其他命令（/ds:init、/ds:upgrade、
+> /ds:vision、第三方 skill）也不会触发。
+
 战略调整：/ds:vision
-新功能开发：/ds:build → Explore → Spec → Demo → Build
-Bug 修复：/ds:fix
+版本交付：直接描述你想做的事（自动触发 build）
+升级维护：/ds:upgrade
 
 ```
 
@@ -161,6 +166,8 @@ Bug 修复：/ds:fix
   },
   "plugin_version": "[当前插件版本号]",
   "currentVersion": "0.0.0",
+  "versionGoal": null,
+  "versionPlan": null,
   "status": "init_completed",
   "phases": {
     "init_completed": true,
@@ -174,7 +181,12 @@ Bug 修复：/ds:fix
   "directories": {
     "src": ["server", "web"]
   },
-  "installed_at": "[当前日期]"
+  "installed_at": "[当前日期]",
+  "versions": [],
+  "worklog": {
+    "unreleased": [],
+    "released": {}
+  }
 }
 ```
 
@@ -208,7 +220,7 @@ CLAUDE.md 结构：
   ✅/⚠️ "## 项目" 章节存在
   ✅/⚠️ "## 仓库结构" 章节存在
   ✅/⚠️ "## 工作方式" 章节存在
-  ✅/⚠️ 包含 /ds:vision、/ds:build、/ds:fix 命令引用
+  ✅/⚠️ 包含 /ds:vision、/ds:build 命令引用
 ```
 
 ### Step 8: 汇报结果
@@ -233,7 +245,7 @@ CLAUDE.md 结构：
 **CLAUDE.md：** [处理结果]
 
 **下一步：**
-- 执行 `/ds:vision` 梳理产品定位（完成后自动回填项目信息），待 vision 完成后再 /ds:build（开始版本交付）
+- 执行 `/ds:vision` 梳理产品定位（完成后自动回填项目信息），待 vision 完成后开始描述你的需求（build 自动触发）
 ```
 
 ## 强制规则

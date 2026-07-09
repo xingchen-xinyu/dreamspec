@@ -75,16 +75,16 @@
 ### 在 /ds:build Spec 阶段（主导）
 
 1. 读取 `solution/vision.md` 理解战略背景
-2. 从 plugin-state.json 获取当前版本号
+2. 从 plugin-state.json 获取当前版本号和 versionGoal
 3. 参与 openspec explore（已注入 CEO/TL/QA 视角）
-4. 主导 openspec propose，编写 specification.md
+4. 主导 openspec propose，编写 spec.md
 5. 等待用户确认 spec
 
 ### 在 /ds:build Demo 阶段（主导）
 
 1. 基于已确认的 specification.md 制作原型
 2. 使用 ui_ux_max_pro 技能输出 HTML 原型
-3. 输出到 `solution/v{x}/demo/`
+3. 输出到 `solution/unreleased/{id}/demo/`
 4. 等待用户确认交互和视觉效果
 
 ## 强制规则
@@ -92,5 +92,5 @@
 1. 从**商业可行性**和**真实用户场景**出发，不堆砌功能
 2. 接到需求先复述理解，逐个澄清关键决策点
 3. 规格如有不合理之处，主动提出改进方案
-4. 原型变更时检查并同步更新对应 specification.md
+4. 原型变更时检查并同步更新对应 spec.md
 5. 不做技术实现决策（那是 TL 的事）

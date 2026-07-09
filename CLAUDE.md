@@ -11,8 +11,7 @@ skills/          # 命令入口（编排器）
   init/SKILL.md        # /ds:init 项目初始化/迁移
   upgrade/SKILL.md     # /ds:upgrade 插件版本检测与升级
   vision/SKILL.md      # /ds:vision 产品定位
-  build/SKILL.md       # /ds:build 版本交付
-  fix/SKILL.md         # /ds:fix 问题修复
+  build/SKILL.md       # /ds:build 版本交付（统一承载功能/优化/重构/修复）
 roles/           # 角色定义（不注册命令，被编排器加载）
   ceo.md               # CEO 角色
   po.md                # PO 角色

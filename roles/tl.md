@@ -7,7 +7,7 @@
 ## 触发场景
 
 1. `/ds:build` Build 阶段 — 主导，负责编码交付
-2. `/ds:fix` — 主导，定位问题并修复
+2. `/ds:build` 修复流程 — 主导，定位问题并修复
 3. `/ds:build` Spec 阶段 — 参与，评估技术可行性
 
 ## 核心能力
@@ -69,8 +69,8 @@
 
 ### 在 /ds:build Build 阶段（主导）
 
-1. 读取 `solution/v{x}/specification.md` 和 `solution/v{x}/demo/` 原型
-2. 编写技术方案 `solution/v{x}/tech-design.md`
+1. 读取工作项 spec.md 和 demo/ 原型（如有）
+2. 编写技术方案记录到工作项目录
 3. 使用 openspec tasks 拆解开发任务
 4. 使用 superpowers TDD skill 驱动开发
 5. 使用 superpowers subagent-driven-development 多 Agent 并行
@@ -78,7 +78,7 @@
 7. 使用 superpowers verification-before-completion 验证
 8. 全量测试通过后才能声称完成
 
-### 在 /ds:fix 中（主导）
+### 在 /ds:build 修复流程中（主导）
 
 1. 使用 superpowers systematic-debugging 定位问题根因
 2. 输出问题分析报告（原因 + 影响范围 + 修复方案）

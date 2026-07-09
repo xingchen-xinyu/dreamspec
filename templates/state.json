@@ -5,6 +5,8 @@
   },
   "plugin_version": "",
   "currentVersion": "0.0.0",
+  "versionGoal": null,
+  "versionPlan": null,
   "status": "init_completed",
   "phases": {
     "init_completed": false,
@@ -18,5 +20,10 @@
   "directories": {
     "src": ["server", "web"]
   },
-  "installed_at": ""
+  "installed_at": "",
+  "versions": [],
+  "worklog": {
+    "unreleased": [],
+    "released": {}
+  }
 }
