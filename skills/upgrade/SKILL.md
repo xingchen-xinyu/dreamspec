@@ -172,8 +172,21 @@ claude plugin marketplace update ui-ux-pro-max-skill
 
 如果 dreamspec 升级成功且用户输入包含 `--force` 关键词 → 强制升级模式，否则为增量更新：
 
-- 增量更新（默认）：升级后检查是否需要补全目录、对比 CLAUDE.md 模板、迁移 plugin-state.json
+- 增量更新（默认）：升级后检查是否需要补全目录、对比 CLAUDE.md 模板、自动同步 plugin-state.json 版本号
 - 强制升级（--force）：用远端最新版本覆盖本地 Skill 文件，保留用户数据
+
+**🔄 自动同步版本号（dreamspec 升级成功后必须执行）：**
+
+dreamspec 升级成功后，立即从 `.claude-plugin/plugin.json` 读取新版本号，同步写入 `.claude/plugin-state.json` 的 `plugin_version` 字段：
+
+```
+1. 读取 .claude-plugin/plugin.json 中的 version 字段 → 获取新版本号
+2. 读取 .claude/plugin-state.json（如项目未 init 则跳过此步骤）
+3. 更新 plugin_version 字段为新版本号
+4. 写回 .claude/plugin-state.json
+```
+
+> **红线：** dreamspec 自身升级成功后，必须自动同步 `plugin_version` 到 `plugin-state.json`，不允许让用户再手动执行 `/ds:init` 来刷新版本号。
 
 **升级失败处理：**
 - 任一插件升级失败 → 不阻塞流程，记录失败信息，继续下一个
@@ -191,7 +204,7 @@ dreamspec 自身升级后，检查项目状态是否需要同步：
 检查项：
   - 新增目录是否已补全（对比 plugin-state.json 中的 directories 与实际目录）
   - CLAUDE.md 是否包含所有必要章节（项目 / 仓库结构 / 技术栈 / 工作方式）
-  - plugin-state.json 字段是否与最新模板一致
+  - plugin-state.json 字段是否与最新模板一致（plugin_version 已在 Step A5 自动同步，无需再检查）
   - 如有不合规 → 提示用户运行 /ds:init 同步
 ```
 
@@ -209,13 +222,16 @@ dreamspec 自身升级后，检查项目状态是否需要同步：
 **🔄 升级结果：**
 | 插件 | 结果 |
 |------|------|
-| dreamspec | ✅ 已升级 v1.4.4 → v1.4.5 |
+| dreamspec | ✅ 已升级 v1.4.4 → v1.5.3 |
 | superpowers | ✅ 已是最新 (vX.X.X) |
 | frontend-design | ✅ 已是最新 (vX.X.X) |
 | ui_ux_max_pro | ⚠️ 未安装，已跳过 |
 | openspec | ✅ 已是最新 (vX.X.X) |
 
 （如有失败项，列出原因和手动修复命令）
+
+**📋 plugin-state.json：**（仅已 init 项目展示）
+✅ plugin_version 已同步为 v1.5.3
 
 **📋 合规复检：**（仅已 init 项目展示）
 ✅ 项目结构完整，无需同步
@@ -252,11 +268,24 @@ claude plugin update dreamspec@dreamspec-market --scope project
 
 **升级失败处理：** 展示失败信息和手动修复命令。
 
+**🔄 自动同步版本号（升级成功后必须执行）：**
+
+dreamspec 升级成功后，立即同步 `plugin-state.json` 中的版本号：
+
+```
+1. 读取 .claude-plugin/plugin.json 中的 version 字段 → 获取新版本号
+2. 读取 .claude/plugin-state.json（如项目未 init 则跳过此步骤）
+3. 更新 plugin_version 字段为新版本号
+4. 写回 .claude/plugin-state.json
+```
+
+> **红线：** dreamspec 升级成功后，必须自动同步 `plugin_version` 到 `plugin-state.json`，不允许让用户再手动执行 `/ds:init` 来刷新版本号。
+
 ## Step B3: 合规复检与汇报
 
 > **仅在项目已初始化时执行**（`.claude/plugin-state.json` 存在）。
 
-合规复检内容同模式 A Step A6，检查 DreamSpec 升级后项目结构是否需要同步。
+合规复检内容同模式 A Step A6，检查 DreamSpec 升级后项目结构是否需要同步（plugin_version 已在 Step B2 自动同步，无需再检查）。
 
 汇报（根据命令输出选择模板）：
 
@@ -267,6 +296,9 @@ claude plugin update dreamspec@dreamspec-market --scope project
 
 **🔄 升级结果：**
 ✅ dreamspec 已升级 v1.4.4 → v1.5.3
+
+**📋 plugin-state.json：**（仅已 init 项目展示）
+✅ plugin_version 已同步为 v1.5.3
 
 **📋 合规复检：**（仅已 init 项目展示）
 ✅ 项目结构完整，无需同步
@@ -295,3 +327,4 @@ claude plugin update dreamspec@dreamspec-market --scope project
 - 升级失败不阻断流程，记录失败信息，继续下一个插件
 - 只升级插件本身，不修改用户源代码文件（src/ 等）
 - 合规复检仅在项目已初始化时执行
+- **dreamspec 升级后必须自动同步 `plugin_version` 到 `plugin-state.json`**，禁止让用户再手动执行 `/ds:init` 刷新版本号
