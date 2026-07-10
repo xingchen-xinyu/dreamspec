@@ -1,14 +1,13 @@
 ---
 name: ds:release
-description: 用户准备发版、发布版本、上线、打包时使用
+description: ds:release 命令 — 发版、生成 changelog 并归档
 ---
 
 # /ds:release — 发版
 
 ## 触发
 
-- 显式调用：`/ds:release`
-- 自动触发：用户表达发版意图（"发版"、"发布"、"上线"、"打包发布"等）
+手动调用 `/ds:release`。
 
 ---
 

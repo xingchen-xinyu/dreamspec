@@ -122,9 +122,9 @@ claude plugin install dreamspec@dreamspec-market --scope project
 | `/ds:init` | 项目初始化/迁移 + 合规检测 | 新项目开始、切换到插件模式（自动安装缺失依赖）|
 | `/ds:upgrade` | 依赖管理 + 插件升级 | 支持全量更新（含依赖）和仅升级 DreamSpec 两种模式，支持 `--force` 强制覆盖 |
 | `/ds:vision` | 产品定位梳理 | 0→1 必须：精简访谈 → 分步确认，产出产品宪法（含待细化方向），后续按需调整战略 |
-| `/ds:plan` | 版本规划 | 讨论 MVP 范围、版本拆分、优先级、路线图 |
-| `/ds:commit` | 提交记录 | 日常提交代码，自动总结+红线检查+记录 worklog |
-| `/ds:release` | 发版 | 汇总 unreleased → 生成 changelog → 打 tag → 归档 |
+| `/ds:plan` | 版本规划 | 手动调用，讨论 MVP 范围、版本拆分、优先级、路线图 |
+| `/ds:commit` | 提交记录 | 手动调用，总结改动+红线检查+记录 worklog |
+| `/ds:release` | 发版 | 手动调用，汇总 unreleased → 生成 changelog → 打 tag → 归档 |
 
 ## 工作流
 
@@ -148,14 +148,14 @@ AI 带着角色要求调用它们，DreamSpec 不拦截
 ### 日常开发节奏
 
 ```
-开发功能 → /ds:commit（记录提交）
-修 bug   → /ds:commit
-优化重构 → /ds:commit
+开发功能 → 手动 /ds:commit（记录提交）
+修 bug   → 手动 /ds:commit
+优化重构 → 手动 /ds:commit
 ...
-功能都交付了 → /ds:release（发版）
+功能都交付了 → 手动 /ds:release（发版）
 ```
 
-三个命令是存档点，开发过程完全自由。
+三个命令手动调用，日常开发中 PO/TL 自动加载工程要求。
 
 ### 角色自动加载
 

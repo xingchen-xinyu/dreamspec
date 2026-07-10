@@ -1,14 +1,13 @@
 ---
 name: ds:commit
-description: 用户提交代码、commit、保存工作进度时使用
+description: ds:commit 命令 — 提交代码并记录 worklog
 ---
 
 # /ds:commit — 提交记录
 
 ## 触发
 
-- 显式调用：`/ds:commit`
-- 自动触发：用户表达提交意图（"提交代码"、"commit"、"保存进度"、"这个做完了提交"等）
+手动调用 `/ds:commit`。
 
 ---
 
