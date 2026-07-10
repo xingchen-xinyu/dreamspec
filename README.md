@@ -19,7 +19,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 
 ## 升级
 
-`/ds:upgrade` 是 DreamSpec 的依赖管家，支持两种升级模式。`/ds:init` 也具备依赖安装能力——两个命令都能处理依赖，先跑哪个都行。
+`/ds:upgrade` 是 DreamSpec 的依赖管家，支持两种升级模式。`/ds:init` 末尾也提供依赖安装——两个命令都能处理依赖，先跑哪个都行。
 
 ### 使用 /ds:upgrade（推荐）
 
@@ -38,12 +38,11 @@ claude plugin install dreamspec@dreamspec-market --scope project
 
 ### 全量更新（模式 A）
 
-1. 检测并自动安装缺失的依赖插件（superpowers、frontend-design、ui_ux_max_pro、openspec）
-2. 检测 dreamspec 主插件是否有新版本（从 GitHub 获取远端版本号）
-3. 检测所有依赖插件是否有更新
-4. 展示版本差异汇总表，等待你确认
-5. 依次升级依赖插件，最后升级 dreamspec 自身
-6. （已初始化项目）升级后合规复检，提示是否需要同步项目结构
+1. 检测所有依赖插件的安装状态和版本号，缺失项由用户勾选安装
+2. 刷新 marketplace 缓存，获取远端最新版本信息
+3. 确认后，依次安装用户勾选的缺失依赖 → 升级所有已有插件
+4. dreamspec 自身最后升级，支持 `--force` 强制重装
+5. （已初始化项目）升级后合规复检，提示是否需要同步项目结构
 
 ### 仅升级 DreamSpec（模式 B）
 
@@ -55,10 +54,10 @@ claude plugin install dreamspec@dreamspec-market --scope project
 
 ### 强制升级
 
-如果升级过程中出现问题，或需要强制覆盖本地文件：
+如果升级过程中出现问题，或需要强制覆盖本地文件（A/B 模式均支持）：
 
 ```
-/ds:upgrade --force      # 全量更新模式下强制升级，用远端最新版本覆盖本地 Skill 文件，保留用户数据
+/ds:upgrade --force      # 卸载重装 dreamspec，绕开版本号判断，强制同步远端最新版本
 ```
 
 ### 手动升级（备选）
@@ -88,7 +87,7 @@ claude plugin marketplace update dreamspec-market
 claude plugin install dreamspec@dreamspec-market --scope project
 ```
 
-在 Claude Code 中（先跑 `/ds:init` 或 `/ds:upgrade` 都行，两个命令都会自动安装缺失依赖）：
+在 Claude Code 中（先跑 `/ds:init` 或 `/ds:upgrade` 都行，两个命令都支持依赖安装）：
 
 ```
 /ds:init          # 配置项目信息，创建目录结构，合规检测
@@ -119,7 +118,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 
 | 命令 | 用途 | 何时用 |
 |------|------|--------|
-| `/ds:init` | 项目初始化/迁移 + 合规检测 | 新项目开始、切换到插件模式（自动安装缺失依赖）|
+| `/ds:init` | 项目初始化/迁移 + 合规检测 | 新项目开始、切换到插件模式（末尾可选安装依赖）|
 | `/ds:upgrade` | 依赖管理 + 插件升级 | 支持全量更新（含依赖）和仅升级 DreamSpec 两种模式，支持 `--force` 强制覆盖 |
 | `/ds:vision` | 产品定位梳理 | 0→1 必须：精简访谈 → 分步确认，产出产品宪法（含待细化方向），后续按需调整战略 |
 | `/ds:plan` | 版本规划 | 手动调用，讨论 MVP 范围、版本拆分、优先级、路线图 |
