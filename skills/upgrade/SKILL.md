@@ -14,7 +14,7 @@ description: 依赖管理 + 插件升级 — 支持全量更新和仅升级 Drea
 
 可在任意安装了 DreamSpec 插件的目录中独立运行，不依赖项目是否已初始化。
 
-> **提示：** 如果直接运行 `/ds:init`，init 也会自动安装依赖（采用阻断策略）。无论先跑哪个命令，最终依赖都会就绪。
+> **提示：** 如果直接运行 `/ds:init`，init 末尾也会提醒用户选择性安装依赖（非阻断）。无论先跑哪个命令，最终依赖都会就绪。
 
 ## 入口
 
@@ -62,7 +62,7 @@ description: 依赖管理 + 插件升级 — 支持全量更新和仅升级 Drea
 
 ## Step A1: 依赖检测（仅检测，不安装）
 
-> 检测所有依赖插件的安装状态，汇总缺失项。**本步骤不做任何安装操作**，安装统一在 Step A4 用户确认后执行。
+> 检测所有依赖插件的安装状态，汇总缺失项。**本步骤不做任何安装操作**，安装统一在 Step A4 阶段一执行（依赖选择已在 A1.D 完成）。
 
 依赖检测采用**两级模式**：先检查设备级（全局是否安装），再检查项目级（当前项目是否已配置）。两级都满足才算"已就绪"。
 
@@ -182,7 +182,7 @@ claude plugin marketplace update ui-ux-pro-max-skill
 - ✅ 全部安装成功 → 进入阶段二
 - ⚠️ 部分/全部安装失败 → **记录警告**，展示失败原因和手动安装命令，继续阶段二（不阻断）
 
-> 与 `/ds:init` Step 2 的区别：init 中依赖是后续流程的前置条件，安装失败必须终止（🚫阻断）；upgrade 中依赖安装失败不影响升级流程（⚠️警告）。
+> 与 `/ds:init` Step 6 的区别：init 中依赖安装为手动触发（用户主动勾选），安装失败不阻断 init 流程；upgrade 中依赖安装跟随升级流程自动执行（A1.D 已预先勾选），安装失败同样不阻断升级流程（⚠️警告）。
 
 ### 阶段二：执行升级
 
@@ -197,7 +197,7 @@ claude plugin marketplace update ui-ux-pro-max-skill
    - 如阶段一未涉及 openspec（已就绪，跳过阶段一）→ `npm install -g @fission-ai/openspec@latest` → `cd <项目根目录>` → `openspec config profile`（如尚未选择扩展模式）→ `openspec update`
 2. superpowers：`claude plugin update superpowers@claude-plugins-official --scope project`
 3. frontend-design：`claude plugin update frontend-design@claude-plugins-official --scope project`
-4. ui_ux_max_pro：`claude plugin marketplace update ui-ux-pro-max-skill` → `claude plugin update ui-ux-pro-max@ui-ux-pro-max-skill --scope project`
+4. ui_ux_max_pro：`claude plugin update ui-ux-pro-max@ui-ux-pro-max-skill --scope project`
 
 > 阶段一中已安装的依赖：`claude plugin update` 会自动判断为"已是最新"，无需特殊处理。
 > 阶段一中安装失败的依赖：跳过升级步骤，报告中标注。
@@ -404,7 +404,7 @@ dreamspec 升级/重装成功后，立即同步 `plugin-state.json` 中的版本
 - 模式 B 不执行任何依赖检测和依赖升级操作
 - 不手动比对版本号，依赖 `claude plugin update` 命令自身的"已是最新则跳过"能力
 - 升级前先更新 marketplace，确保获取最新版本信息
-- 升级前必须用户确认，不自动升级
+- 模式 A 升级前必须用户确认；模式 B 用户选择即已表明升级意图，不二次确认
 - 升级失败不阻断流程，记录失败信息，继续下一个插件
 - 只升级插件本身，不修改用户源代码文件（src/ 等）
 - 合规复检仅在项目已初始化时执行
