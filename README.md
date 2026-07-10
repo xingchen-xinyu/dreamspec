@@ -1,6 +1,6 @@
 # AI Team — AI Agent 创业开发团队
 
-将 openspec、superpowers、ui_ux_max_pro 等技能的开发流程和角色协作方法固化为一个 Claude Code 插件。通过 CEO/PO/TL/QA 四个 AI 角色按标准流程协作，帮你把想法从战略规划到编码交付完整落地。
+将工程规范、角色协作方法固化为一个 Claude Code 插件。不侵入你的开发过程——你正常使用 openspec、superpowers、ux_ui 等任意工具，AI 自动识别工作类型并按需加载对应角色的工程要求。CEO/PO/TL 三角色随身带，帮你确保工程底线不丢失。
 
 ## 安装
 
@@ -13,9 +13,9 @@ claude plugin marketplace update dreamspec-market
 claude plugin install dreamspec@dreamspec-market --scope project
 ```
 
-安装后自动注册以下命令：`/ds:init`  `/ds:upgrade`  `/ds:vision`  `/ds:build`
+安装后自动注册以下命令：`/ds:init` `/ds:upgrade` `/ds:vision` `/ds:plan` `/ds:commit` `/ds:release`
 
-依赖插件 openspec、superpowers、ui_ux_max_pro、frontend-design 由 `/ds:init` 或 `/ds:upgrade` 自动检测并安装——两个命令都能处理依赖，先跑哪个都行。
+角色 `PO` / `TL` 在开发过程中自动触发，无需手动调用。
 
 ## 升级
 
@@ -93,7 +93,10 @@ claude plugin install dreamspec@dreamspec-market --scope project
 ```
 /ds:init          # 配置项目信息，创建目录结构，合规检测
 /ds:vision        # 精简访谈 + 分步确认，制定产品定位与战略
-接下来直接在对话中描述你想做的事，build 会自动触发
+/ds:plan          # 讨论版本规划、MVP 范围、路线图
+然后正常开发，AI 自动识别工作类型并加载对应角色工程要求
+/ds:commit        # 做完一个功能，提交代码并记录
+/ds:release       # 功能都交付了，发版
 ```
 
 ### 已有项目
@@ -109,7 +112,7 @@ claude plugin install dreamspec@dreamspec-market --scope project
 
 ```
 /ds:init          # 检测项目状态，无痛迁移，不删除任何现有文件
-接下来直接在对话中描述你想做的事，build 会自动触发
+然后正常开发，AI 自动识别工作类型并加载对应角色工程要求
 ```
 
 ## 命令参考
@@ -119,33 +122,58 @@ claude plugin install dreamspec@dreamspec-market --scope project
 | `/ds:init` | 项目初始化/迁移 + 合规检测 | 新项目开始、切换到插件模式（自动安装缺失依赖）|
 | `/ds:upgrade` | 依赖管理 + 插件升级 | 支持全量更新（含依赖）和仅升级 DreamSpec 两种模式，支持 `--force` 强制覆盖 |
 | `/ds:vision` | 产品定位梳理 | 0→1 必须：精简访谈 → 分步确认，产出产品宪法（含待细化方向），后续按需调整战略 |
-| `/ds:build` | 版本交付 | 自动触发，统一承载功能开发/优化/重构/修复，开发→发版两阶段 |
+| `/ds:plan` | 版本规划 | 讨论 MVP 范围、版本拆分、优先级、路线图 |
+| `/ds:commit` | 提交记录 | 日常提交代码，自动总结+红线检查+记录 worklog |
+| `/ds:release` | 发版 | 汇总 unreleased → 生成 changelog → 打 tag → 归档 |
 
 ## 工作流
 
-### /ds:build 两种模式
+### 核心理念：工程要求随身带
 
-**开发期**：用户表达开发意图 → 自动触发 build → 意图路由 → 工作项累积到 unreleased
-**发版期**：用户说"发版" → 汇总所有工作项 → 自动判定版本类型 → 生成版本档案
+DreamSpec 不接管你的开发过程——你正常使用 openspec、superpowers、ux_ui 等任意工具，AI 根据当前工作类型**自动识别并加载**对应角色的工程要求。
 
 ```
-自动触发 build
-    ├── 大版本 → CEO 审核 → 完整四步（Explore+Spec → Demo → Build）→ 集成稳定 → 发版
-    ├── 功能/优化/重构 → Explore+Spec → Demo(可选) → Build → 工作项完成
-    ├── 修复 → TL定位 → 修复 → QA验证 → 工作项完成
-    └── 发版 → 汇总 unreleased → 判定 major/minor/patch → 生成档案 + git tag
+用户日常开发（自由使用任意 skill / 工具）
+        │
+        ▼
+意图识别 + 角色自动加载（📋 TL·后端 已激活）
+        │
+角色要求驻留在上下文 → 后续一切操作自动携带
+        │
+        ▼
+第三方 skill（openspec/superpowers/ux_ui/...）
+AI 带着角色要求调用它们，DreamSpec 不拦截
 ```
 
-每步完成后用户确认，QA 贯穿全流程。
+### 日常开发节奏
+
+```
+开发功能 → /ds:commit（记录提交）
+修 bug   → /ds:commit
+优化重构 → /ds:commit
+...
+功能都交付了 → /ds:release（发版）
+```
+
+三个命令是存档点，开发过程完全自由。
+
+### 角色自动加载
+
+| 你在做什么 | 自动加载 | 带什么要求 |
+|-----------|---------|-----------|
+| 写后端代码（API/数据库/服务端）| TL·后端 | TDD + 分层架构 + API 规范 + 安全编码 |
+| 写前端代码（页面/组件/小程序）| TL·前端 | 组件复用 + CSS 变量 + 三态 + 检查清单 |
+| 讨论方案/写 PRD | PO·PRD | 七要素 + 验收覆盖 + 业务规则可执行 |
+| 设计原型 | PO·原型 | HTML 高保真 + 三态 + 按钮防重 |
+| 修 bug / 重构 / 优化 | TL | 系统化调试 + 代码质量 + 安全红线 |
 
 ## 角色说明
 
-| 角色 | 负责 | 参与场景 |
+| 角色 | 负责 | 加载方式 |
 |------|------|---------|
-| **CEO** | 商业价值、战略方向 | `/ds:vision`（主导）、`/ds:build` Explore + Major 审核 |
-| **PO** | 产品设计、Spec、原型 | `/ds:build` Spec + Demo（主导） |
-| **TL** | 技术方案、编码交付、问题修复 | `/ds:build` Build + 修复流程（主导） |
-| **QA** | 质量审查、规范检查 | 全流程贯穿 |
+| **CEO** | 产品定位方法论 | `/ds:vision` 加载 |
+| **PO** | 产品方案（PRD + 原型）| 自动触发（方案讨论/原型设计时） |
+| **TL** | 技术交付（TDD/架构/代码质量/安全）| 自动触发（编码/调试/重构时） |
 
 ## 目录结构
 
@@ -153,20 +181,15 @@ claude plugin install dreamspec@dreamspec-market --scope project
 项目根目录/
 ├── solution/                   # 战略、版本档案
 │   ├── vision.md               # 产品宪法
-│   ├── unreleased/             # 开发期工作项
+│   ├── version-plan.md         # 版本演进计划（活文档）
+│   ├── worklog.json            # 开发期记录（unreleased）
 │   └── v{major}/               # 已发版（按 Major 分组）
 │       └── v{x.y.z}/
-│           ├── specification.md  # 版本规格（产品决策视角）
-│           ├── tech-design.md    # 技术方案
-│           ├── demo/             # HTML 原型
-│           ├── delivery-report.md # 交付报告
-│           └── changelog.md      # 发布说明
-├── src/
-│   ├── server/        # 后端
-│   ├── web/           # 前端
-│   └── ...            # /ds:vision 后按技术栈扩展
+│           ├── changelog.md    # 版本完整日志
+│           └── worklog.json    # 该版本记录
+├── CHANGELOG.md                # 版本索引（每版一行）
 ├── .claude/
-│   └── plugin-state.json
+│   └── plugin-state.json       # 插件配置
 └── README.md
 ```
 
@@ -174,16 +197,16 @@ claude plugin install dreamspec@dreamspec-market --scope project
 
 **Q: 和直接使用 openspec/superpowers 有什么区别？**
 
-A: 本插件是它们的上层编排——提供角色视角、阶段划分、协作流程。你不再需要自己记住"什么时候用哪个技能"。
+A: 本插件提供角色视角的工程规范自动注入——你正常用 openspec/superpowers 等工具，AI 自动按工作类型加载对应角色的工程要求，无需自己记住规范。
 
 **Q: 已有项目会不会被破坏？**
 
 A: `/ds:init` 和 `/ds:upgrade` 只新增文件和目录，不删除、不修改任何现有文件。原 CLAUDE.md 会备份为 `.bak`。两个命令都具备依赖安装能力，无论先跑哪个都能确保环境就绪。
 
-**Q: 每个阶段必须走完吗？**
+**Q: 为什么 build 命令被移除了？**
 
-A: 每步完成后你可以选择跳过或调整。流程是骨架，你是决策者。
+A: v3.0 重构为三个更灵活的命令——`/ds:plan`（版本规划）、`/ds:commit`（提交记录）、`/ds:release`（发版）。日常开发不再被流程打断，工程要求通过角色自动加载自然融入。
 
-**Q: 无前端的后端项目 Demo 步骤怎么处理？**
+**Q: 角色自动识别不准怎么办？**
 
-A: build 的 Explore 阶段会自动判定——feature 询问用户是否需要 Demo，optimization/refactor/fix 默认跳过。纯后端项目可省略。
+A: 不影响正常开发。角色只是在上下文中提供工程规范，识别不准确时用户正常操作即可，不会出现错误行为。不在定义范围内的工作，插件保持透明。

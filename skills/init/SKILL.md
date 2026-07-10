@@ -133,10 +133,12 @@ src/web/     # 前端
 ## 工作方式
 
 本项目使用 DreamSpec 管理开发流程。收到开发需求时优先匹配 DreamSpec 技能
-（ds:build 等），除非用户显式调用其他技能。
+（ds:commit、ds:plan 等），除非用户显式调用其他技能。
 
 - `/ds:vision` — 产品定位与战略
-- `/ds:build` — 版本交付（功能/修复/优化/重构）
+- `/ds:plan` — 版本规划（MVP、路线图）
+- `/ds:commit` — 提交记录
+- `/ds:release` — 发版
 - `/ds:upgrade` — 插件升级
 
 ```
@@ -218,7 +220,7 @@ CLAUDE.md 结构：
   ✅/⚠️ "## 项目" 章节存在
   ✅/⚠️ "## 仓库结构" 章节存在
   ✅/⚠️ "## 工作方式" 章节存在
-  ✅/⚠️ 包含 /ds:vision、/ds:build 命令引用
+  ✅/⚠️ 包含 /ds:vision、/ds:plan、/ds:commit、/ds:release 命令引用
 ```
 
 ### Step 8: 汇报结果

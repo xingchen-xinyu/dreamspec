@@ -7,32 +7,33 @@
 ## 仓库结构
 
 ```
-skills/          # 命令入口（编排器）
+skills/          # 所有 Skill（命令 + 角色）
   init/SKILL.md        # /ds:init 项目初始化/迁移
   upgrade/SKILL.md     # /ds:upgrade 插件版本检测与升级
   vision/SKILL.md      # /ds:vision 产品定位
-  build/SKILL.md       # /ds:build 版本交付（统一承载功能/优化/重构/修复）
-roles/           # 角色定义（不注册命令，被编排器加载）
-  ceo.md               # CEO 角色
-  po.md                # PO 角色
-  tl.md                # TL 角色
-  qa.md                # QA 角色
+  ceo/SKILL.md         # CEO — 产品定位方法论（仅 vision 加载）
+  plan/SKILL.md        # /ds:plan 版本规划
+  po/SKILL.md          # PO — 产品方案（通用 + PRD/原型专项，自动触发）
+  tl/SKILL.md          # TL — 技术交付（通用 + 后端/前端/原型专项，自动触发）
+  commit/SKILL.md      # /ds:commit 提交记录（自包含）
+  release/SKILL.md     # /ds:release 发版（自包含）
 templates/       # 项目模板
   state.json     # plugin-state.json 模板
 ```
+
+## 设计理念
+
+- **工程要求随身带**：角色 = 随身工程规范，不指挥用户怎么干活，只确保工程底线不丢失
+- **不侵入开发过程**：用户正常使用 openspec/superpowers/ux_ui 等任意工具，角色要求自动融入
+- **按需加载**：意图识别（关键词+上下文）→ 自动匹配角色 Skill → 内部按工作子类激活专项要求
+- **commit 和 release 是存档点**：日常开发零打扰，只在提交和发版时主动介入
 
 ## 技术说明
 
 - 插件类型：Claude Code Plugin
 - Skill 格式：Markdown with YAML frontmatter
-- 依赖：openspec、superpowers、ui_ux_max_pro、frontend-design
-
-## Skill 文件规范
-
-- 编排器 Skill 负责流程调度和角色加载
-- 角色 Skill 负责专业能力定义和规范约束
-- 角色定义放在 roles/ 目录，不注册命令入口，仅被编排器按需加载
-- 强制规则使用"红线"标记，语气明确不容模糊
+- 角色通过 Skill 系统的 description 自动匹配触发，无需用户显式调用
+- 命令 Skill 负责前置检查；角色 Skill 负责工程规范定义，内部按子类分层
 
 ## 开发准则
 
