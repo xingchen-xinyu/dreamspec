@@ -40,11 +40,11 @@ description: 依赖管理 + 插件升级 — 支持全量更新和仅升级 Drea
     "options": [
       {
         "label": "仅升级 DreamSpec",
-        "description": "跳过依赖检测，只升级 DreamSpec 主插件（更快，适合日常跟进）"
+        "description": "跳过依赖检测，只升级 DreamSpec 主插件（更快，适合日常跟进）。支持 --force 强制刷新"
       },
       {
         "label": "全量更新",
-        "description": "检测所有依赖（superpowers、frontend-design、ui_ux_max_pro、openspec），并升级全部插件到最新版本"
+        "description": "检测所有依赖（superpowers、frontend-design、ui_ux_max_pro、openspec），并升级全部插件到最新版本。支持 --force 强制刷新 dreamspec"
       }
     ]
   }]
@@ -203,27 +203,40 @@ claude plugin marketplace update ui-ux-pro-max-skill
 > 阶段一中安装失败的依赖：跳过升级步骤，报告中标注。
 
 **主插件（最后执行）：**
-5. dreamspec：`claude plugin update dreamspec@dreamspec-market --scope project`
+5. dreamspec — 根据用户输入是否含 `--force` 选择路径：
 
-**dreamspec 自升级特殊处理：**
-
-如果 dreamspec 升级成功且用户输入包含 `--force` 关键词 → 强制升级模式，否则为增量更新：
-
-- 增量更新（默认）：升级后检查是否需要补全目录、对比 CLAUDE.md 模板、自动同步 plugin-state.json 版本号
-- 强制升级（--force）：用远端最新版本覆盖本地 Skill 文件，保留用户数据
-
-**🔄 自动同步版本号（dreamspec 升级成功后必须执行）：**
-
-dreamspec 升级成功后，立即从 `.claude-plugin/plugin.json` 读取新版本号，同步写入 `.claude/plugin-state.json` 的 `plugin_version` 字段：
+**普通模式（默认）：**
 
 ```
-1. 读取 .claude-plugin/plugin.json 中的 version 字段 → 获取新版本号
-2. 读取 .claude/plugin-state.json（如项目未 init 则跳过此步骤）
-3. 更新 plugin_version 字段为新版本号
-4. 写回 .claude/plugin-state.json
+claude plugin update dreamspec@dreamspec-market --scope project
 ```
 
-> **红线：** dreamspec 自身升级成功后，必须自动同步 `plugin_version` 到 `plugin-state.json`，不允许让用户再手动执行 `/ds:init` 来刷新版本号。
+**强制模式（用户输入含 `--force`）：**
+
+> 不依赖 `claude plugin update`（它会因为版本号相同而跳过），直接卸载重装以获取远端最新版本：
+
+```
+① claude plugin uninstall dreamspec@dreamspec-market
+② claude plugin marketplace update dreamspec-market
+③ claude plugins install dreamspec@dreamspec-market --scope project
+```
+
+> 无论卸载或安装是否报错，都继续后续步骤（版本号同步、合规复检）。插件文件覆盖行为由 install 命令自行处理——远端最新版本覆盖本地 Skill 文件，用户项目数据（src/、.claude/plugin-state.json 等）不受影响。
+
+**🔄 升级后处理（两种模式共用）：**
+
+dreamspec 升级/重装成功后，立即：
+
+```
+1. 检查是否需要补全新增目录（对比远端模板和本地目录结构）
+2. 对比 CLAUDE.md 模板（如有新增章节则提示用户）
+3. 读取 .claude-plugin/plugin.json 中的 version 字段 → 获取新版本号
+4. 读取 .claude/plugin-state.json（如项目未 init 则跳过）
+5. 更新 plugin_version 字段为新版本号
+6. 写回 .claude/plugin-state.json
+```
+
+> **红线：** dreamspec 升级/重装后，必须自动同步 `plugin_version` 到 `plugin-state.json`，不允许让用户再手动执行 `/ds:init` 来刷新版本号。
 
 **升级失败处理：**
 - 任一插件升级失败 → 不阻塞流程，记录失败信息，继续下一个
@@ -260,6 +273,7 @@ dreamspec 自身升级后，检查项目状态是否需要同步：
 | 插件 | 结果 |
 |------|------|
 | dreamspec | ✅ 已升级 v1.4.4 → v1.5.3 |
+（如为 --force 模式：| dreamspec | ✅ 已强制重装为 v1.5.3 |）
 | superpowers | ✅ 已是最新 (vX.X.X) |
 | frontend-design | ✅ 已是最新 (vX.X.X) |
 | ui_ux_max_pro | ⚠️ 未安装，已跳过 |
@@ -280,6 +294,7 @@ dreamspec 自身升级后，检查项目状态是否需要同步：
 # 模式 B：仅升级 DreamSpec
 
 > 跳过依赖检测，仅升级 DreamSpec 主插件。用户选择此模式即已表明升级意图，不二次确认。
+> 支持 `--force` 强制模式：`/ds:upgrade --force` 卸载重装，绕开版本号判断，强制同步远端最新版本。
 > **核心策略**：不预先检测版本，直接执行 `claude plugin update`——命令自身判断有无更新并输出结果。
 
 ## Step B1: 刷新 marketplace
@@ -292,7 +307,9 @@ claude plugin marketplace update dreamspec-market
 
 ## Step B2: 执行升级
 
-> **不手动比对版本号。** 直接执行 `claude plugin update`，该命令是版本判断的最终权威。
+根据用户输入是否含 `--force` 选择路径：
+
+**普通模式（默认）— 不手动比对版本号，`claude plugin update` 自行判断：**
 
 ```
 claude plugin update dreamspec@dreamspec-market --scope project
@@ -303,17 +320,29 @@ claude plugin update dreamspec@dreamspec-market --scope project
 - 输出包含 `Already up to date` / `已是最新` 等关键词 → 已是最新，无需升级
 - 输出包含错误信息 → 升级失败
 
-**升级失败处理：** 展示失败信息和手动修复命令。
-
-**🔄 自动同步版本号（升级成功后必须执行）：**
-
-dreamspec 升级成功后，立即同步 `plugin-state.json` 中的版本号：
+**强制模式（用户输入含 `--force`）— 卸载重装，绕开版本号判断：**
 
 ```
-1. 读取 .claude-plugin/plugin.json 中的 version 字段 → 获取新版本号
-2. 读取 .claude/plugin-state.json（如项目未 init 则跳过此步骤）
-3. 更新 plugin_version 字段为新版本号
-4. 写回 .claude/plugin-state.json
+① claude plugin uninstall dreamspec@dreamspec-market
+② claude plugin marketplace update dreamspec-market
+③ claude plugins install dreamspec@dreamspec-market --scope project
+```
+
+> 无论卸载或安装是否报错，都继续后续步骤。插件文件由 install 命令自动覆盖，用户项目数据不受影响。
+
+**升级失败处理：** 展示失败信息和手动修复命令。
+
+**🔄 升级后处理（两种模式共用）：**
+
+dreamspec 升级/重装成功后，立即同步 `plugin-state.json` 中的版本号：
+
+```
+1. 检查是否需要补全新增目录
+2. 对比 CLAUDE.md 模板（如有新增章节则提示用户）
+3. 读取 .claude-plugin/plugin.json 中的 version 字段 → 获取新版本号
+4. 读取 .claude/plugin-state.json（如项目未 init 则跳过此步骤）
+5. 更新 plugin_version 字段为新版本号
+6. 写回 .claude/plugin-state.json
 ```
 
 > **红线：** dreamspec 升级成功后，必须自动同步 `plugin_version` 到 `plugin-state.json`，不允许让用户再手动执行 `/ds:init` 来刷新版本号。
@@ -349,6 +378,21 @@ dreamspec 升级成功后，立即同步 `plugin-state.json` 中的版本号：
 
 **🔄 升级结果：**
 ✅ dreamspec 已是最新版本（vX.X.X），无需升级
+```
+
+**强制重装：**
+
+```markdown
+## /ds:upgrade（仅升级 DreamSpec）完成
+
+**🔄 升级结果：**
+✅ dreamspec 已强制重装为 vX.X.X（绕过版本号判断，远端最新版本已覆盖本地）
+
+**📋 plugin-state.json：**（仅已 init 项目展示）
+✅ plugin_version 已同步为 vX.X.X
+
+**📋 合规复检：**（仅已 init 项目展示）
+（同升级成功模板）
 ```
 
 ---
