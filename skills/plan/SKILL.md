@@ -16,7 +16,7 @@ description: ds:plan 命令 — 版本规划与路线图制定
 ### Step 1: 前置检查
 
 1. 检查 `solution/vision.md` 是否存在。不存在 → 提示用户先执行 `/ds:vision`
-2. 读取 `.claude/plugin-state.json`，获取 `currentVersion`、`versionGoal`、`versionPlan`
+2. 读取 `solution/version.json`，获取 `currentVersion`、`versionGoal`、`versionPlan`
 3. 读取 `solution/vision.md`，了解产品战略背景
 
 ### Step 2: 战略对齐
@@ -72,7 +72,7 @@ description: ds:plan 命令 — 版本规划与路线图制定
 > 计划列 = 初始规划；实际列 = 每次发版后回填真实内容。
 ```
 
-2. 更新 `plugin-state.json`：
+2. 更新 `solution/version.json`：
    - `versionGoal` → 目标版本号
    - `versionPlan` → `solution/version-plan.md`
 

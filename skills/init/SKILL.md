@@ -89,9 +89,9 @@ description: 项目初始化/迁移 — 依赖就绪保障 → 项目配置 → 
 3. 展示识别结果，等待用户确认或修正
 
 **已初始化项目**（存在 `.claude/plugin-state.json`）：
-- 读取已有配置，沿用现有 `plugin-state.json` 中的项目信息
-- 仅更新可能变化的字段（如 `installed_at`）
-- 如果用户希望修改项目配置，可在展示已有配置时确认或修正
+- 读取已有 `plugin_version` 和 `directories` 配置
+- 补全新增的标准目录和字段
+- 如果用户希望修改目录配置，可在展示已有配置时确认或修正
 
 ### Step 4: 创建目录结构
 
@@ -156,37 +156,29 @@ src/web/     # 前端
 
 ### Step 6: 写入状态文件
 
+### 写入 plugin-state.json
+
 从当前项目安装的 `.claude-plugin/plugin.json` 读取 `version` 字段获取实际插件版本号，写入 `.claude/plugin-state.json`：
 
 ```json
 {
-  "project": {
-    "name": "[根目录名称]",
-    "description": ""
-  },
   "plugin_version": "[当前插件版本号]",
+  "directories": {
+    "src": ["server", "web"]
+  }
+}
+```
+
+### 初始化 solution/version.json
+
+首次初始化时创建 `solution/version.json`（已存在则跳过）：
+
+```json
+{
   "currentVersion": "0.0.0",
   "versionGoal": null,
   "versionPlan": null,
-  "status": "init_completed",
-  "phases": {
-    "init_completed": true,
-    "vision_completed": false
-  },
-  "techStack": {
-    "frontend": [],
-    "backend": [],
-    "platforms": []
-  },
-  "directories": {
-    "src": ["server", "web"]
-  },
-  "installed_at": "[当前日期]",
-  "versions": [],
-  "worklog": {
-    "unreleased": [],
-    "released": {}
-  }
+  "versions": []
 }
 ```
 
@@ -203,12 +195,10 @@ src/web/     # 前端
   ✅/⚠️ CLAUDE.md
   ✅/⚠️ .claude/plugin-state.json
   ✅/⚠️ README.md
+  ✅/⚠️ solution/version.json
 
 plugin-state.json 字段完整性：
-  ✅/⚠️ project.name 已填写
   ✅/⚠️ plugin_version 已记录
-  ✅/⚠️ phases.init_completed = true
-  ✅/⚠️ techStack 结构完整（frontend/backend/platforms）
   ✅/⚠️ directories 已配置
 
 目录结构：

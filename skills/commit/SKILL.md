@@ -19,7 +19,7 @@ description: ds:commit 命令 — 提交代码并记录 worklog
    ```json
    { "unreleased": [] }
    ```
-2. 读取 `plugin-state.json` 获取 `versionGoal`
+2. 读取 `solution/version.json` 获取 `versionGoal`
 
 ### Step 2: 回顾改动
 

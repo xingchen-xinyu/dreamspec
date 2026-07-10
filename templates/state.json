@@ -1,29 +1,6 @@
 {
-  "project": {
-    "name": "",
-    "description": ""
-  },
   "plugin_version": "",
-  "currentVersion": "0.0.0",
-  "versionGoal": null,
-  "versionPlan": null,
-  "status": "init_completed",
-  "phases": {
-    "init_completed": false,
-    "vision_completed": false
-  },
-  "techStack": {
-    "frontend": [],
-    "backend": [],
-    "platforms": []
-  },
   "directories": {
     "src": ["server", "web"]
-  },
-  "installed_at": "",
-  "versions": [],
-  "worklog": {
-    "unreleased": [],
-    "released": {}
   }
 }

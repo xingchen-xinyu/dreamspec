@@ -204,7 +204,7 @@ dreamspec 自身升级后，检查项目状态是否需要同步：
 检查项：
   - 新增目录是否已补全（对比 plugin-state.json 中的 directories 与实际目录）
   - CLAUDE.md 是否包含所有必要章节（项目 / 仓库结构 / 技术栈 / 工作方式）
-  - plugin-state.json 字段是否与最新模板一致（plugin_version 已在 Step A5 自动同步，无需再检查）
+  - plugin-state.json 结构是否与最新模板一致（plugin_version 已在 Step A5 自动同步，无需再检查）
   - 如有不合规 → 提示用户运行 /ds:init 同步
 ```
 

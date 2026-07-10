@@ -318,20 +318,16 @@ CEO 直接执行以下操作：
 1. 从 `solution/vision.md` 提取结构化信息：
    - **产品名称** — 从「产品定位」章节提取
    - **一句话描述** — 从「产品定位」章节提取定位语
-   - **技术栈** — 从「高阶技术方向」章节提取确认的技术选型，整理为 `{ frontend: [], backend: [], platforms: [] }` 格式
+   - **技术栈** — 从「高阶技术方向」章节提取确认的技术选型
 
-2. 更新 `.claude/plugin-state.json`：
-   - `project.name` / `project.description` → 提取值
-   - `phases.vision_completed` → `true`
-   - `techStack` → 提取的技术栈
-   - `directories` → 同步目录扩展结果
-
-3. 更新 `CLAUDE.md` 占位符：
+2. 更新 `CLAUDE.md` 占位符：
    - `{{PROJECT_INFO}}` → 实际产品名称 + 一句话描述
    - `{{TECH_STACK}}` → 实际技术栈列表
    - 保留其他已有内容，只做确定性替换
 
-4. 根据确认的技术选型，在 `src/` 下新增对应目录，只新增不删除
+3. 根据确认的技术选型，在 `src/` 下新增对应目录（只新增不删除）
+
+4. 将新增目录追加到 `.claude/plugin-state.json` 的 `directories.src` 数组中（不覆盖已有值，只追加新目录）
 
 完成后向用户汇报：
 
@@ -340,7 +336,7 @@ CEO 直接执行以下操作：
 - 产品名称：[name]
 - 一句话描述：[description]
 - 技术栈：[techStack 摘要]
-- 已更新：CLAUDE.md、plugin-state.json
+- 已更新：CLAUDE.md
 - 已创建目录：[新增目录列表]
 ```
 
@@ -405,7 +401,7 @@ CEO 直接执行：
   #### Q1：[CEO 提问原文]
   **[用户]**：[用户回答原文]
   ```
-- 如有技术栈变化，同步更新 `plugin-state.json` 和 `CLAUDE.md`
+- 如有技术栈变化，同步更新 `CLAUDE.md`
 
 ### 更新后确认
 
@@ -417,8 +413,8 @@ CEO 直接执行：
 
 - `solution/interview-raw.md` — 访谈原始记录（一问一答，用户原话不加工。迭代更新时追加更新记录）
 - `solution/vision.md` — 产品定位文档（产品宪法，12 章节）
-- 更新 `plugin-state.json` — 回填 project.name/description + techStack + directories + vision_completed
 - 更新 `CLAUDE.md` — 回填项目名称、描述、技术栈
+- 更新 `.claude/plugin-state.json` — 追加 vision 阶段新增的个性目录到 `directories.src`
 
 ---
 

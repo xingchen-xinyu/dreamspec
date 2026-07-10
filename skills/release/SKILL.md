@@ -16,7 +16,7 @@ description: ds:release 命令 — 发版、生成 changelog 并归档
 ### Step 1: 前置准备
 
 1. 读取 `solution/worklog.json`，获取 unreleased 列表
-2. 读取 `plugin-state.json`，获取 `currentVersion`、`versionGoal`
+2. 读取 `solution/version.json`，获取 `currentVersion`、`versionGoal`
 3. 读取 `solution/vision.md`（如存在），了解产品战略
 
 ### Step 2: 汇总待发版内容
@@ -114,7 +114,7 @@ description: ds:release 命令 — 发版、生成 changelog 并归档
 
 ### Step 7: 收尾
 
-1. 更新 `plugin-state.json`：
+1. 更新 `solution/version.json`：
    - `currentVersion` → 新版本号
    - `versionGoal` → null（发版版本匹配时清空）
    - `versions[]` 追加新版本记录
