@@ -191,14 +191,15 @@ src/web/     # 前端
     "options": [
       {"label": "ui_ux_max_pro", "description": "需完整安装（marketplace + install）"},
       {"label": "openspec", "description": "需项目级配置（openspec init + config profile + update）"},
-      {"label": "frontend-design", "description": "需项目级安装（install --scope project）"}
+      {"label": "frontend-design", "description": "需项目级安装（install --scope project）"},
+      {"label": "跳过，都不安装", "description": "稍后可通过 /ds:upgrade 补装"}
     ]
   }]
 }
 ```
 
-- 用户全不选 → 跳过安装，提示后续可通过 `/ds:upgrade` 补装
-- 用户选择部分 → 只安装勾选的依赖
+- 用户选择"跳过，都不安装" → 跳过安装，提示后续可通过 `/ds:upgrade` 补装
+- 用户选择具体依赖 → 只安装勾选的依赖
 
 #### D. 按需安装（只安装用户勾选的依赖）
 
