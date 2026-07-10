@@ -105,25 +105,24 @@ description: 依赖管理 + 插件升级 — 支持全量更新和仅升级 Drea
 
 **所有依赖已就绪** → 跳过选择，直接进入 Step A2。
 
-**有缺失** → 使用 AskUserQuestion 让用户勾选要安装的依赖（多选，默认全选）：
+**有缺失** → 使用 AskUserQuestion 让用户勾选要安装的依赖（多选，默认全选）。**只展示实际缺失的依赖作为选项，不添加"跳过"选项——取消所有勾选即为跳过。AskUserQuestion 限制 2-4 个选项，依赖数量恰好在这个范围内：**
 
 ```json
 {
   "questions": [{
-    "question": "以下依赖未就绪，选择要安装的依赖（可多选，全不选则跳过）：",
+    "question": "以下依赖未就绪，勾选要安装的依赖（可多选）。取消所有勾选 = 跳过安装：",
     "header": "选择依赖",
     "multiSelect": true,
     "options": [
       {"label": "ui_ux_max_pro", "description": "需完整安装（marketplace + install）"},
       {"label": "openspec", "description": "需项目级配置（openspec init + config profile + update）"},
-      {"label": "frontend-design", "description": "需项目级安装（install --scope project）"},
-      {"label": "跳过，都不安装", "description": "后续只升级已有插件，缺失依赖可稍后通过 /ds:upgrade 补装"}
+      {"label": "frontend-design", "description": "需项目级安装（install --scope project）"}
     ]
   }]
 }
 ```
 
-- 用户选择"跳过，都不安装" → 跳过所有依赖安装，后续只升级已有插件
+- 用户取消所有勾选 → 跳过所有依赖安装，后续只升级已有插件
 - 用户选择具体依赖 → 只安装勾选的依赖，选择结果传递给 Step A4 阶段一
 
 > **红线：** openspec 的项目级配置是**最容易遗漏**的环节——设备全局已安装 openspec 时，AI 容易错误地判定为"已就绪"而跳过。必须检查 `openspec/` 目录是否存在。

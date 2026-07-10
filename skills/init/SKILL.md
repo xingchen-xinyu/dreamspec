@@ -180,25 +180,24 @@ src/web/     # 前端
 
 **所有依赖已就绪** → 跳过安装，直接进入 Step 7。
 
-**有缺失** → 使用 AskUserQuestion 让用户勾选要安装的依赖（多选，默认全选）：
+**有缺失** → 使用 AskUserQuestion 让用户勾选要安装的依赖（多选，默认全选）。**只展示实际缺失的依赖作为选项，不添加额外的"跳过"选项（取消所有勾选即为跳过）。AskUserQuestion 限制 2-4 个选项，依赖数量恰好在这个范围内：**
 
 ```json
 {
   "questions": [{
-    "question": "以下依赖未就绪，选择要安装的依赖（可多选，全不选则跳过）：",
+    "question": "以下依赖未就绪，勾选要安装的依赖（可多选）。取消所有勾选 = 跳过安装：",
     "header": "选择依赖",
     "multiSelect": true,
     "options": [
       {"label": "ui_ux_max_pro", "description": "需完整安装（marketplace + install）"},
       {"label": "openspec", "description": "需项目级配置（openspec init + config profile + update）"},
-      {"label": "frontend-design", "description": "需项目级安装（install --scope project）"},
-      {"label": "跳过，都不安装", "description": "稍后可通过 /ds:upgrade 补装"}
+      {"label": "frontend-design", "description": "需项目级安装（install --scope project）"}
     ]
   }]
 }
 ```
 
-- 用户选择"跳过，都不安装" → 跳过安装，提示后续可通过 `/ds:upgrade` 补装
+- 用户取消所有勾选 → 跳过安装，提示后续可通过 `/ds:upgrade` 补装
 - 用户选择具体依赖 → 只安装勾选的依赖
 
 #### D. 按需安装（只安装用户勾选的依赖）
