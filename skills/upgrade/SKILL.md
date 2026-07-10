@@ -101,8 +101,29 @@ description: 依赖管理 + 插件升级 — 支持全量更新和仅升级 Drea
 | openspec | ✅ | ❌ 缺失 | 1.5.0 | 需项目级配置 |
 ```
 
-> 如果所有依赖都已就绪 → 在 Step A3 确认时可以简化："所有依赖已就绪，仅需升级。"
-> 如果有缺失 → 缺失信息将传递给 Step A3（用户确认）和 Step A4（执行安装）。
+**D. 用户选择**
+
+**所有依赖已就绪** → 跳过选择，直接进入 Step A2。
+
+**有缺失** → 使用 AskUserQuestion 让用户勾选要安装的依赖（多选，默认全选）：
+
+```json
+{
+  "questions": [{
+    "question": "以下依赖未就绪，选择要安装的依赖（可多选，全不选则跳过）：",
+    "header": "选择依赖",
+    "multiSelect": true,
+    "options": [
+      {"label": "ui_ux_max_pro", "description": "需完整安装（marketplace + install）"},
+      {"label": "openspec", "description": "需项目级配置（openspec init + config profile + update）"},
+      {"label": "frontend-design", "description": "需项目级安装（install --scope project）"}
+    ]
+  }]
+}
+```
+
+- 用户全不选 → 跳过所有依赖安装，后续只升级已有插件
+- 用户选择部分 → 只安装勾选的依赖，选择结果传递给 Step A4 阶段一
 
 > **红线：** openspec 的项目级配置是**最容易遗漏**的环节——设备全局已安装 openspec 时，AI 容易错误地判定为"已就绪"而跳过。必须检查 `openspec/` 目录是否存在。
 
@@ -120,31 +141,11 @@ claude plugin marketplace update ui-ux-pro-max-skill
 
 ## Step A3: 用户确认
 
-根据 Step A1 的检测结果，向用户展示待办事项并请求确认：
+> 依赖安装已在上一步确认完毕，此处只确认升级操作。
 
-**如果 A1 检测到缺失依赖：**
+直接询问用户：
 
-```markdown
-📋 待确认事项：
-
-**安装缺失依赖：**
-（列出 Step A1 检测到的缺失项，含具体安装内容）
-
-| 依赖 | 需执行操作 |
-|------|-----------|
-| ui_ux_max_pro | 完整安装（marketplace + install） |
-| openspec | 项目级配置（openspec init + config profile + update） |
-
-**升级已有插件：**
-升级命令会自动跳过已是最新版本的插件，不会重复安装。
-
----
-是否继续执行？安装失败不阻断流程，会记录警告后继续升级。
-```
-
-**如果 A1 检测到所有依赖已就绪：**
-
-> 所有依赖已就绪。已更新所有 marketplace。是否尝试升级全部插件？
+> 已更新所有 marketplace。是否尝试升级全部插件？
 >
 > 升级命令会自动跳过已是最新版本的插件，不会重复安装。
 
@@ -153,11 +154,11 @@ claude plugin marketplace update ui-ux-pro-max-skill
 
 ## Step A4: 执行安装与升级
 
-> **分两阶段：** 先安装 A1 检测到的缺失依赖（⚠️非阻断），再升级所有已安装插件。
+> **分两阶段：** 先安装 A1 中用户勾选的依赖（⚠️非阻断），再升级所有已安装插件。
 
 ### 阶段一：安装缺失依赖 ⚠️非阻断
 
-> 仅安装 A1 中标记为缺失的依赖，已就绪的跳过。安装失败不阻断流程，记录警告后继续阶段二。
+> 仅安装 A1.D 中用户勾选的依赖，未勾选或已就绪的跳过。安装失败不阻断流程，记录警告后继续阶段二。
 
 按需执行的安装命令（只执行缺失的层级）：
 
